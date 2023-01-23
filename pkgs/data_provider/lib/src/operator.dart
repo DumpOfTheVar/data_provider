@@ -151,8 +151,8 @@ class Substring implements UnaryOperator<String, String> {
 
   @override
   String apply(String a) {
-    final cropped_start = start < a.length ? start : a.length;
-    final cropped_end = (end != null && end! < a.length) ? end : a.length;
-    return a.substring(cropped_start, cropped_end);
+    final croppedStart = start < a.length ? start : a.length;
+    final croppedEnd = (end != null && end! < a.length) ? end : a.length;
+    return a.substring(croppedStart, croppedEnd);
   }
 }
