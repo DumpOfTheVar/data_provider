@@ -47,7 +47,7 @@ jobs:
         uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
         with:
           path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider;commands:analyze"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider;commands:analyze_0"
           restore-keys: |
             os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider
             os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6
@@ -100,16 +100,16 @@ jobs:
         if: "always() && steps.pkgs_data_provider_pub_upgrade.conclusion == 'success'"
         working-directory: pkgs/data_provider
   job_004:
-    name: "analyze_and_format; linux; Dart dev; PKGS: pkgs/data_provider, pkgs/data_provider_sqlite; `dart analyze`"
+    name: "analyze_and_format; linux; Dart dev; PKG: pkgs/data_provider; `dart analyze`"
     runs-on: ubuntu-latest
     steps:
       - name: Cache Pub hosted dependencies
         uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
         with:
           path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider-pkgs/data_provider_sqlite;commands:analyze"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider;commands:analyze_0"
           restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider-pkgs/data_provider_sqlite
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider
             os:ubuntu-latest;pub-cache-hosted;sdk:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
@@ -129,26 +129,17 @@ jobs:
         run: dart analyze
         if: "always() && steps.pkgs_data_provider_pub_upgrade.conclusion == 'success'"
         working-directory: pkgs/data_provider
-      - id: pkgs_data_provider_sqlite_pub_upgrade
-        name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
-        if: "always() && steps.checkout.conclusion == 'success'"
-        working-directory: pkgs/data_provider_sqlite
-      - name: pkgs/data_provider_sqlite; dart analyze
-        run: dart analyze
-        if: "always() && steps.pkgs_data_provider_sqlite_pub_upgrade.conclusion == 'success'"
-        working-directory: pkgs/data_provider_sqlite
   job_005:
-    name: "analyze_and_format; linux; Dart dev; PKGS: pkgs/data_provider, pkgs/data_provider_sqlite; `dart format --output=none --set-exit-if-changed .`"
+    name: "analyze_and_format; linux; Dart dev; PKG: pkgs/data_provider; `dart format --output=none --set-exit-if-changed .`"
     runs-on: ubuntu-latest
     steps:
       - name: Cache Pub hosted dependencies
         uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
         with:
           path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider-pkgs/data_provider_sqlite;commands:format"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider;commands:format"
           restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider-pkgs/data_provider_sqlite
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider
             os:ubuntu-latest;pub-cache-hosted;sdk:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
@@ -168,16 +159,67 @@ jobs:
         run: "dart format --output=none --set-exit-if-changed ."
         if: "always() && steps.pkgs_data_provider_pub_upgrade.conclusion == 'success'"
         working-directory: pkgs/data_provider
+  job_006:
+    name: "analyze_and_format; linux; Flutter stable; PKG: pkgs/data_provider_sqlite; `dart format --output=none --set-exit-if-changed .`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:pkgs/data_provider_sqlite;commands:format"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:pkgs/data_provider_sqlite
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+        with:
+          channel: stable
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
       - id: pkgs_data_provider_sqlite_pub_upgrade
-        name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        name: pkgs/data_provider_sqlite; flutter pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: "pkgs/data_provider_sqlite; dart format --output=none --set-exit-if-changed ."
         run: "dart format --output=none --set-exit-if-changed ."
         if: "always() && steps.pkgs_data_provider_sqlite_pub_upgrade.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
-  job_006:
+  job_007:
+    name: "analyze_and_format; linux; Flutter stable; PKG: pkgs/data_provider_sqlite; `flutter analyze`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:pkgs/data_provider_sqlite;commands:analyze_1"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:pkgs/data_provider_sqlite
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+        with:
+          channel: stable
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - id: pkgs_data_provider_sqlite_pub_upgrade
+        name: pkgs/data_provider_sqlite; flutter pub upgrade
+        run: flutter pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/data_provider_sqlite
+      - name: pkgs/data_provider_sqlite; flutter analyze
+        run: flutter analyze
+        if: "always() && steps.pkgs_data_provider_sqlite_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/data_provider_sqlite
+  job_008:
     name: "unit_test; linux; Dart 2.18.6; PKG: pkgs/data_provider; `dart test`"
     runs-on: ubuntu-latest
     steps:
@@ -185,88 +227,7 @@ jobs:
         uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
         with:
           path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider;commands:test"
-          restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider
-            os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6
-            os:ubuntu-latest;pub-cache-hosted
-            os:ubuntu-latest
-      - name: Setup Dart SDK
-        uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
-        with:
-          sdk: "2.18.6"
-      - id: checkout
-        name: Checkout repository
-        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
-      - id: pkgs_data_provider_pub_upgrade
-        name: pkgs/data_provider; dart pub upgrade
-        run: dart pub upgrade
-        if: "always() && steps.checkout.conclusion == 'success'"
-        working-directory: pkgs/data_provider
-      - name: pkgs/data_provider; dart test
-        run: dart test
-        if: "always() && steps.pkgs_data_provider_pub_upgrade.conclusion == 'success'"
-        working-directory: pkgs/data_provider
-    needs:
-      - job_001
-      - job_002
-      - job_003
-      - job_004
-      - job_005
-  job_007:
-    name: "unit_test; linux; Dart dev; PKGS: pkgs/data_provider, pkgs/data_provider_sqlite; `dart test`"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cache Pub hosted dependencies
-        uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
-        with:
-          path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider-pkgs/data_provider_sqlite;commands:test"
-          restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider-pkgs/data_provider_sqlite
-            os:ubuntu-latest;pub-cache-hosted;sdk:dev
-            os:ubuntu-latest;pub-cache-hosted
-            os:ubuntu-latest
-      - name: Setup Dart SDK
-        uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
-        with:
-          sdk: dev
-      - id: checkout
-        name: Checkout repository
-        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
-      - id: pkgs_data_provider_pub_upgrade
-        name: pkgs/data_provider; dart pub upgrade
-        run: dart pub upgrade
-        if: "always() && steps.checkout.conclusion == 'success'"
-        working-directory: pkgs/data_provider
-      - name: pkgs/data_provider; dart test
-        run: dart test
-        if: "always() && steps.pkgs_data_provider_pub_upgrade.conclusion == 'success'"
-        working-directory: pkgs/data_provider
-      - id: pkgs_data_provider_sqlite_pub_upgrade
-        name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
-        if: "always() && steps.checkout.conclusion == 'success'"
-        working-directory: pkgs/data_provider_sqlite
-      - name: pkgs/data_provider_sqlite; dart test
-        run: dart test
-        if: "always() && steps.pkgs_data_provider_sqlite_pub_upgrade.conclusion == 'success'"
-        working-directory: pkgs/data_provider_sqlite
-    needs:
-      - job_001
-      - job_002
-      - job_003
-      - job_004
-      - job_005
-  job_008:
-    name: "cron; linux; Dart 2.18.6; PKG: pkgs/data_provider; `dart test`"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cache Pub hosted dependencies
-        uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
-        with:
-          path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider;commands:test"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider;commands:test_0"
           restore-keys: |
             os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider
             os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6
@@ -297,14 +258,14 @@ jobs:
       - job_006
       - job_007
   job_009:
-    name: "cron; linux; Dart dev; PKG: pkgs/data_provider; `dart test`"
+    name: "unit_test; linux; Dart dev; PKG: pkgs/data_provider; `dart test`"
     runs-on: ubuntu-latest
     steps:
       - name: Cache Pub hosted dependencies
         uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
         with:
           path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider;commands:test"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider;commands:test_0"
           restore-keys: |
             os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider
             os:ubuntu-latest;pub-cache-hosted;sdk:dev
@@ -335,33 +296,33 @@ jobs:
       - job_006
       - job_007
   job_010:
-    name: "cron; linux; Dart dev; PKG: pkgs/data_provider_sqlite; `dart test`"
+    name: "unit_test; linux; Flutter stable; PKG: pkgs/data_provider_sqlite; `flutter test`"
     runs-on: ubuntu-latest
     steps:
       - name: Cache Pub hosted dependencies
         uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
         with:
           path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider_sqlite;commands:test"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:pkgs/data_provider_sqlite;commands:test_1"
           restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider_sqlite
-            os:ubuntu-latest;pub-cache-hosted;sdk:dev
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:pkgs/data_provider_sqlite
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - name: Setup Dart SDK
-        uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
-          sdk: dev
+          channel: stable
       - id: checkout
         name: Checkout repository
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
       - id: pkgs_data_provider_sqlite_pub_upgrade
-        name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        name: pkgs/data_provider_sqlite; flutter pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
-      - name: pkgs/data_provider_sqlite; dart test
-        run: dart test
+      - name: pkgs/data_provider_sqlite; flutter test
+        run: flutter test
         if: "always() && steps.pkgs_data_provider_sqlite_pub_upgrade.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
     needs:
@@ -373,6 +334,129 @@ jobs:
       - job_006
       - job_007
   job_011:
+    name: "cron; linux; Dart 2.18.6; PKG: pkgs/data_provider; `dart test`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider;commands:test_0"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6;packages:pkgs/data_provider
+            os:ubuntu-latest;pub-cache-hosted;sdk:2.18.6
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
+        with:
+          sdk: "2.18.6"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - id: pkgs_data_provider_pub_upgrade
+        name: pkgs/data_provider; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/data_provider
+      - name: pkgs/data_provider; dart test
+        run: dart test
+        if: "always() && steps.pkgs_data_provider_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/data_provider
+    needs:
+      - job_001
+      - job_002
+      - job_003
+      - job_004
+      - job_005
+      - job_006
+      - job_007
+      - job_008
+      - job_009
+      - job_010
+  job_012:
+    name: "cron; linux; Dart dev; PKG: pkgs/data_provider; `dart test`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider;commands:test_0"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/data_provider
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
+        with:
+          sdk: dev
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - id: pkgs_data_provider_pub_upgrade
+        name: pkgs/data_provider; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/data_provider
+      - name: pkgs/data_provider; dart test
+        run: dart test
+        if: "always() && steps.pkgs_data_provider_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/data_provider
+    needs:
+      - job_001
+      - job_002
+      - job_003
+      - job_004
+      - job_005
+      - job_006
+      - job_007
+      - job_008
+      - job_009
+      - job_010
+  job_013:
+    name: "cron; linux; Flutter stable; PKG: pkgs/data_provider_sqlite; `flutter test`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:pkgs/data_provider_sqlite;commands:test_1"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:pkgs/data_provider_sqlite
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+        with:
+          channel: stable
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - id: pkgs_data_provider_sqlite_pub_upgrade
+        name: pkgs/data_provider_sqlite; flutter pub upgrade
+        run: flutter pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/data_provider_sqlite
+      - name: pkgs/data_provider_sqlite; flutter test
+        run: flutter test
+        if: "always() && steps.pkgs_data_provider_sqlite_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/data_provider_sqlite
+    needs:
+      - job_001
+      - job_002
+      - job_003
+      - job_004
+      - job_005
+      - job_006
+      - job_007
+      - job_008
+      - job_009
+      - job_010
+  job_014:
     name: "cron; windows; Dart 2.18.6; PKG: pkgs/data_provider; `dart test`"
     runs-on: windows-latest
     steps:
@@ -400,7 +484,10 @@ jobs:
       - job_005
       - job_006
       - job_007
-  job_012:
+      - job_008
+      - job_009
+      - job_010
+  job_015:
     name: "cron; windows; Dart dev; PKG: pkgs/data_provider; `dart test`"
     runs-on: windows-latest
     steps:
@@ -428,24 +515,27 @@ jobs:
       - job_005
       - job_006
       - job_007
-  job_013:
-    name: "cron; windows; Dart dev; PKG: pkgs/data_provider_sqlite; `dart test`"
+      - job_008
+      - job_009
+      - job_010
+  job_016:
+    name: "cron; windows; Flutter stable; PKG: pkgs/data_provider_sqlite; `flutter test`"
     runs-on: windows-latest
     steps:
-      - name: Setup Dart SDK
-        uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
-          sdk: dev
+          channel: stable
       - id: checkout
         name: Checkout repository
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
       - id: pkgs_data_provider_sqlite_pub_upgrade
-        name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        name: pkgs/data_provider_sqlite; flutter pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
-      - name: pkgs/data_provider_sqlite; dart test
-        run: dart test
+      - name: pkgs/data_provider_sqlite; flutter test
+        run: flutter test
         if: "always() && steps.pkgs_data_provider_sqlite_pub_upgrade.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
     needs:
@@ -456,3 +546,6 @@ jobs:
       - job_005
       - job_006
       - job_007
+      - job_008
+      - job_009
+      - job_010

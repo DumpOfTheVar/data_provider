@@ -1,6 +1,6 @@
 # See https://github.com/google/mono_repo.dart for details on this file
 sdk:
-  - dev
+  - stable
 
 stages:
   - analyze_and_format:
