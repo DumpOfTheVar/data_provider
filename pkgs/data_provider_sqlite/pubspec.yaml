@@ -1,7 +1,7 @@
 name: data_provider_sqlite
 description: Sqlite data provider
 version: 0.1.0
-homepage: https://github.com
+homepage: https://github.com/DumpOfTheVar/data_provider
 
 environment:
   sdk: '>=2.18.6 <3.0.0'
@@ -9,7 +9,6 @@ environment:
 dependencies:
   path: ^1.8.3
   sqflite: ^2.2.3
-  data_provider: ^0.1.0
 
 dev_dependencies:
   lints: ^2.0.0
