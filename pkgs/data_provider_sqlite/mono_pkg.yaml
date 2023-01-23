@@ -1,0 +1,16 @@
+# See https://github.com/google/mono_repo.dart for details on this file
+sdk:
+  - dev
+  - pubspec
+
+stages:
+  - analyze_and_format:
+      - analyze
+      - format
+  - unit_test:
+      - test
+  - cron:
+      - test:
+        os:
+          - linux
+          - windows
