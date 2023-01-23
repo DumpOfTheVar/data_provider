@@ -21,16 +21,35 @@ void main() {
       expect(mappedProjector3(entity.toJson()), true);
     });
 
-    test('maps binary expression projector', () {
+    test('maps unary expression projector', () {
       final mapper = InMemoryProjectorMapper();
-      final entity = EntityStub('Test', 42, true);
-      final p1 = ConstValue<EntityStub, num>(36.6);
-      final p2 = FieldValue<EntityStub, num>('b');
-      final projector = BinaryExpression(Plus(), p1, p2);
+      final p = FieldValue<EntityStub, num>('b');
+      final projector = UnaryExpression(UnaryMinus(), p);
+      final x = EntityStub('Test', 42, true);
+      final y = EntityStub('Test', -100, true);
+      final z = EntityStub('Test', 0, true);
 
       final mappedProjector = mapper.map(projector);
 
-      expect(mappedProjector(entity.toJson()), 42 + 36.6);
+      expect(mappedProjector(x.toJson()), -42);
+      expect(mappedProjector(y.toJson()), 100);
+      expect(mappedProjector(z.toJson()), 0);
+    });
+
+    test('maps binary expression projector', () {
+      final mapper = InMemoryProjectorMapper();
+      final p1 = ConstValue<EntityStub, num>(36.6);
+      final p2 = FieldValue<EntityStub, num>('b');
+      final projector = BinaryExpression(Plus(), p1, p2);
+      final x = EntityStub('', 42, true);
+      final y = EntityStub('Test', -100, false);
+      final z = EntityStub('Test_2', 0, true);
+
+      final mappedProjector = mapper.map(projector);
+
+      expect(mappedProjector(x.toJson()), 42 + 36.6);
+      expect(mappedProjector(y.toJson()), -100 + 36.6);
+      expect(mappedProjector(z.toJson()), 0 + 36.6);
     });
 
     test('throws expression on not supported projector', () {

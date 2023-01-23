@@ -1,3 +1,6 @@
+import 'package:data_provider/data_provider.dart';
+import 'package:data_provider/src/projector.dart';
+
 import 'sorter.dart';
 import 'specification.dart';
 
@@ -19,18 +22,19 @@ abstract class DataProvider {
   Future<void> deleteAll(Specification specification);
 }
 
-abstract class BaseQuery {}
+typedef EntityMap = Map<String, dynamic>;
 
-abstract class BaseQueryFactory<Q extends BaseQuery> {
-  Q make({
-    Specification? specification,
-    Sorter? sorter,
-    int? limit,
-    int? offset,
-  });
+abstract class UnaryOperatorMapper<S> {
+  S map(UnaryOperator operator);
 }
 
-typedef EntityMap = Map<String, dynamic>;
+abstract class BinaryOperatorMapper<S> {
+  S map(BinaryOperator operator);
+}
+
+abstract class ProjectorMapper<S> {
+  S map(Projector projector);
+}
 
 abstract class SpecificationMapper<S> {
   S map(Specification? specification);

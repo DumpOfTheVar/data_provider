@@ -91,6 +91,31 @@ typedef InMemoryProjector<V> = V Function(EntityMap);
 typedef InMemorySpecification = bool Function(EntityMap);
 typedef InMemorySorter = int Function(EntityMap, EntityMap);
 
+class InMemoryProjectorMapper {
+  InMemoryProjector map(Projector projector) {
+    if (projector is ConstValue) {
+      return (EntityMap _) => projector.value;
+    }
+    if (projector is FieldValue) {
+      return (EntityMap entityMap) => entityMap[projector.field];
+    }
+    if (projector is UnaryExpression) {
+      final p = map(projector.p);
+      return (EntityMap entityMap) => projector.operator.apply(p(entityMap));
+    }
+    if (projector is BinaryExpression) {
+      final p1 = map(projector.p1);
+      final p2 = map(projector.p2);
+      return (EntityMap entityMap) =>
+          projector.operator.apply(p1(entityMap), p2(entityMap));
+    }
+    throw TypeNotSupportedException(
+      'InMemoryDataProvider does not support'
+      'projector type ${projector.runtimeType}.',
+    );
+  }
+}
+
 class InMemorySpecificationMapper
     extends SpecificationMapper<InMemorySpecification> {
   InMemorySpecificationMapper({required this.projectorMapper});
@@ -166,26 +191,6 @@ class InMemorySorterMapper extends SorterMapper<InMemorySorter> {
     }
     throw TypeNotSupportedException(
       'InMemoryDataProvider does not support sorter type ${sorter.runtimeType}.',
-    );
-  }
-}
-
-class InMemoryProjectorMapper {
-  InMemoryProjector map(Projector projector) {
-    if (projector is ConstValue) {
-      return (EntityMap _) => projector.value;
-    }
-    if (projector is FieldValue) {
-      return (EntityMap entityMap) => entityMap[projector.field];
-    }
-    if (projector is BinaryExpression) {
-      final p1 = map(projector.p1);
-      final p2 = map(projector.p2);
-      return (EntityMap entityMap) =>
-          projector.operator.apply(p1(entityMap), p2(entityMap));
-    }
-    throw TypeNotSupportedException(
-      'InMemoryDataProvider does not support projector type ${projector.runtimeType}.',
     );
   }
 }

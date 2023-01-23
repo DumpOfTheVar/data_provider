@@ -70,12 +70,27 @@ void main() {
     });
   });
 
+  group('unary expression projector', () {
+    test('works with unary operator', () {
+      final p = FieldValue<EntityStub, num>('b');
+      final projector =
+          UnaryExpression<EntityStub, num, num>(UnaryMinus<num>(), p);
+      final x = EntityStub('Test', 42, true);
+      final y = EntityStub('Tes', -100, false);
+      final z = EntityStub('Test_2', 0, true);
+
+      expect(projector.project(x), -42);
+      expect(projector.project(y), 100);
+      expect(projector.project(z), 0);
+    });
+  });
+
   group('binary expression projector', () {
     test('works for comparison operators', () {
       final p1 = FieldValue<EntityStub, num>('b');
       final p2 = ConstValue<EntityStub, num>(0);
       final projector =
-          BinaryExpression<EntityStub, num, bool>(Less<num>(), p1, p2);
+      BinaryExpression<EntityStub, num, bool>(Less<num>(), p1, p2);
       final x = EntityStub('Test', 42, true);
       final y = EntityStub('Tes', -100, false);
       final z = EntityStub('Test_2', 0, true);

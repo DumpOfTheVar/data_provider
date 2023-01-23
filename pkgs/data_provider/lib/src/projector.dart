@@ -34,6 +34,16 @@ class FieldValue<T, V> implements Projector<T, V> {
   }
 }
 
+class UnaryExpression<T, P, V> implements Projector<T, V> {
+  const UnaryExpression(this.operator, this.p);
+
+  final UnaryOperator<P, V> operator;
+  final Projector<T, P> p;
+
+  @override
+  V project(T entity) => operator.apply(p.project(entity));
+}
+
 class BinaryExpression<T, P, V> implements Projector<T, V> {
   const BinaryExpression(this.operator, this.p1, this.p2);
 
