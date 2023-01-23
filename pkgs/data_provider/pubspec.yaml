@@ -1,6 +1,6 @@
 name: data_provider
 description: Flexible data provider package
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/DumpOfTheVar/data_provider
 
 environment:

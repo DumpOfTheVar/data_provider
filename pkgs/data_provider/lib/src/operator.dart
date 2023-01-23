@@ -17,7 +17,7 @@ class Equals<P> implements ComparisonOperator<P> {
   }
 
   @override
-  String toString() => '=';
+  String toString() => '==';
 }
 
 class Less<P> implements ComparisonOperator<P> {
@@ -106,31 +106,49 @@ abstract class ArithmeticOperator<P extends num>
 class Plus<P extends num> implements ArithmeticOperator<P> {
   @override
   P apply(P a, P b) => (a + b) as P;
+
+  @override
+  String toString() => '+';
 }
 
 class Minus<P extends num> implements ArithmeticOperator<P> {
   @override
   P apply(P a, P b) => (a - b) as P;
+
+  @override
+  String toString() => '-';
 }
 
 class Multiply<P extends num> implements ArithmeticOperator<P> {
   @override
   P apply(P a, P b) => (a * b) as P;
+
+  @override
+  String toString() => '*';
 }
 
 class Divide implements ArithmeticOperator<double> {
   @override
   double apply(double a, double b) => a / b;
+
+  @override
+  String toString() => '/';
 }
 
 class IntDivide implements ArithmeticOperator<int> {
   @override
   int apply(int a, int b) => a ~/ b;
+
+  @override
+  String toString() => '~/';
 }
 
 class Modulo<P extends num> implements ArithmeticOperator<P> {
   @override
   P apply(P a, P b) => (a % b) as P;
+
+  @override
+  String toString() => '%';
 }
 
 class UnaryMinus<P extends num> implements UnaryOperator<P, P> {
@@ -141,6 +159,9 @@ class UnaryMinus<P extends num> implements UnaryOperator<P, P> {
 class Concat implements BinaryOperator<String, String> {
   @override
   String apply(String a, String b) => a + b;
+
+  @override
+  String toString() => 'concat';
 }
 
 class Substring implements UnaryOperator<String, String> {

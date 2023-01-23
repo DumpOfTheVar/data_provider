@@ -5,7 +5,7 @@ void main() {
   group('equals operator', () {
     test('toString', () {
       final operator = Equals<String>();
-      expect(operator.toString(), '=');
+      expect(operator.toString(), '==');
     });
 
     test('works on strings', () {
@@ -237,6 +237,11 @@ void main() {
   });
 
   group('plus operator', () {
+    test('toString', () {
+      final operator = Plus();
+      expect(operator.toString(), '+');
+    });
+
     test('works on integers', () {
       final operator = Plus<int>();
       expect(operator.apply(0, 0), 0);
@@ -269,6 +274,11 @@ void main() {
   });
 
   group('minus operator', () {
+    test('toString', () {
+      final operator = Minus();
+      expect(operator.toString(), '-');
+    });
+
     test('works on integers', () {
       final operator = Minus<int>();
       expect(operator.apply(0, 0), 0);
@@ -301,6 +311,11 @@ void main() {
   });
 
   group('multiply operator', () {
+    test('toString', () {
+      final operator = Multiply();
+      expect(operator.toString(), '*');
+    });
+
     test('works on integers', () {
       final operator = Multiply<int>();
       expect(operator.apply(0, 0), 0);
@@ -333,6 +348,11 @@ void main() {
   });
 
   group('divide operator', () {
+    test('toString', () {
+      final operator = Divide();
+      expect(operator.toString(), '/');
+    });
+
     test('works on integers', () {
       final operator = Divide();
       expect(operator.apply(0, 42), 0);
@@ -359,6 +379,11 @@ void main() {
   });
 
   group('int divide operator', () {
+    test('toString', () {
+      final operator = IntDivide();
+      expect(operator.toString(), '~/');
+    });
+
     test('works on integers', () {
       final operator = IntDivide();
       expect(operator.apply(0, 42), 0);
@@ -376,6 +401,11 @@ void main() {
   });
 
   group('modulo operator', () {
+    test('toString', () {
+      final operator = Modulo();
+      expect(operator.toString(), '%');
+    });
+
     test('works on integers', () {
       final operator = Modulo();
       expect(operator.apply(0, 42), 0);
@@ -409,6 +439,11 @@ void main() {
   });
 
   group('concat operator', () {
+    test('toString', () {
+      final operator = Concat();
+      expect(operator.toString(), 'concat');
+    });
+
     test('works', () {
       final operator = Concat();
       expect(operator.apply('', ''), '');

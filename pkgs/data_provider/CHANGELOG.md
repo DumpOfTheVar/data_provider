@@ -6,3 +6,7 @@
 
 - Added UnaryExpressionProjector projector
 - Added UnaryExpressionProjector mapping for in memory data provider
+
+## 0.1.2
+- Added toString() method to arithmetic operators
+- Added projector export in library
