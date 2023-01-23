@@ -1,4 +1,3 @@
-
 import 'package:data_provider/src/projector.dart';
 import 'package:data_provider/src/serializable.dart';
 import 'package:data_provider/src/sorter.dart';
@@ -35,7 +34,8 @@ void main() {
     });
 
     test('works for strings when ASC', () {
-      final sorter = ValueSorter<EntityStub>(FieldValue<EntityStub, String>('a'));
+      final sorter =
+          ValueSorter<EntityStub>(FieldValue<EntityStub, String>('a'));
       final x = EntityStub('Test', 42, true);
       final y = EntityStub('Test_2', 0, false);
       final z = EntityStub('Tes', 100, true);
@@ -52,7 +52,8 @@ void main() {
     });
 
     test('works for strings when DESC', () {
-      final sorter = ValueSorter<EntityStub>(FieldValue<EntityStub, String>('a'), false);
+      final sorter =
+          ValueSorter<EntityStub>(FieldValue<EntityStub, String>('a'), false);
       final x = EntityStub('Test', 42, true);
       final y = EntityStub('Test_2', 0, false);
       final z = EntityStub('Tes', 100, true);
@@ -86,7 +87,8 @@ void main() {
     });
 
     test('works for numbers when DESC', () {
-      final sorter = ValueSorter<EntityStub>(FieldValue<EntityStub, num>('b'), false);
+      final sorter =
+          ValueSorter<EntityStub>(FieldValue<EntityStub, num>('b'), false);
       final x = EntityStub('Test', 42, true);
       final y = EntityStub('Test_2', 0, false);
       final z = EntityStub('Tes', 100, true);
@@ -120,7 +122,8 @@ void main() {
     });
 
     test('works for booleans when DESC', () {
-      final sorter = ValueSorter<EntityStub>(FieldValue<EntityStub, bool>('c'), false);
+      final sorter =
+          ValueSorter<EntityStub>(FieldValue<EntityStub, bool>('c'), false);
       final x = EntityStub('Test', 42, true);
       final y = EntityStub('Test_2', 0, false);
       final z = EntityStub('Tes', 100, true);

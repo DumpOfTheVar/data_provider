@@ -1,4 +1,3 @@
-
 import 'sorter.dart';
 import 'specification.dart';
 
@@ -20,8 +19,7 @@ abstract class DataProvider {
   Future<void> deleteAll(Specification specification);
 }
 
-abstract class BaseQuery {
-}
+abstract class BaseQuery {}
 
 abstract class BaseQueryFactory<Q extends BaseQuery> {
   Q make({

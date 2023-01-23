@@ -1,4 +1,3 @@
-
 import 'package:data_provider/data_provider.dart';
 import 'package:data_provider/src/projector.dart';
 
@@ -29,7 +28,8 @@ class ValueSorter<T> implements Sorter<T> {
   final bool isAsc;
 
   @override
-  int compare(T a, T b) => Sorter.compareValues(projector.project(a), projector.project(b), isAsc);
+  int compare(T a, T b) =>
+      Sorter.compareValues(projector.project(a), projector.project(b), isAsc);
 }
 
 class CompositeSorter<T> implements Sorter<T> {
@@ -64,7 +64,8 @@ class FieldSorter<T> extends CustomSorter<T> {
   FieldSorter(Map<String, bool> fields) {
     final children = <Sorter<T>>[];
     for (final field in fields.keys) {
-      children.add(ValueSorter<T>(FieldValue<T, Object?>(field), fields[field]!));
+      children
+          .add(ValueSorter<T>(FieldValue<T, Object?>(field), fields[field]!));
     }
     normalized = CompositeSorter(children);
   }

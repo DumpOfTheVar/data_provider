@@ -1,4 +1,3 @@
-
 class DataProviderException implements Exception {
   DataProviderException([this.message = '']);
 

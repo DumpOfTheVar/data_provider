@@ -1,4 +1,3 @@
-
 import 'exception.dart';
 import 'operator.dart';
 import 'serializable.dart';
@@ -30,7 +29,8 @@ class FieldValue<T, V> implements Projector<T, V> {
     if (entity is Serializable) {
       return entity.toJson()[field];
     }
-    throw TypeNotSupportedException('FieldValue projector does not support type ${entity.runtimeType}.');
+    throw TypeNotSupportedException(
+        'FieldValue projector does not support type ${entity.runtimeType}.');
   }
 }
 

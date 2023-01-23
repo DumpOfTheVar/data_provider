@@ -1,4 +1,3 @@
-
 export 'src/exception.dart';
 export 'src/operator.dart';
 export 'src/serializable.dart';

@@ -1,4 +1,3 @@
-
 import 'package:data_provider/data_provider.dart';
 import 'package:data_provider/src/projector.dart';
 import 'package:test/test.dart';
@@ -52,7 +51,8 @@ void main() {
     });
 
     test('works with getter', () {
-      final projector = FieldValue<NonSerializableStub, String>('a', (entity) => entity.a);
+      final projector =
+          FieldValue<NonSerializableStub, String>('a', (entity) => entity.a);
       final x = NonSerializableStub('Test', []);
       final y = NonSerializableStub('Tes', []);
       final z = NonSerializableStub('Test_2', []);
@@ -74,7 +74,8 @@ void main() {
     test('works for comparison operators', () {
       final p1 = FieldValue<EntityStub, num>('b');
       final p2 = ConstValue<EntityStub, num>(0);
-      final projector = BinaryExpression<EntityStub, num, bool>(Less<num>(), p1, p2);
+      final projector =
+          BinaryExpression<EntityStub, num, bool>(Less<num>(), p1, p2);
       final x = EntityStub('Test', 42, true);
       final y = EntityStub('Tes', -100, false);
       final z = EntityStub('Test_2', 0, true);

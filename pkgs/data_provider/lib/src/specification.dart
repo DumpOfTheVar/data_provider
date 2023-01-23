@@ -1,4 +1,3 @@
-
 import 'operator.dart';
 import 'projector.dart';
 
@@ -78,9 +77,9 @@ class Compare<T, P> implements Specification<T> {
 
   @override
   bool isSatisfiedBy(T entity) => operator.apply(
-    projector1.project(entity),
-    projector2.project(entity),
-  );
+        projector1.project(entity),
+        projector2.project(entity),
+      );
 }
 
 abstract class CustomSpecification<T> implements Specification<T> {

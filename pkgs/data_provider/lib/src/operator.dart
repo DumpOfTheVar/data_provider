@@ -1,5 +1,3 @@
-
-
 import 'package:data_provider/data_provider.dart';
 
 abstract class UnaryOperator<P, V> {
@@ -10,8 +8,7 @@ abstract class BinaryOperator<P, V> {
   V apply(P a, P b);
 }
 
-abstract class ComparisonOperator<P> implements BinaryOperator<P, bool> {
-}
+abstract class ComparisonOperator<P> implements BinaryOperator<P, bool> {}
 
 class Equals<P> implements ComparisonOperator<P> {
   @override
@@ -35,7 +32,8 @@ class Less<P> implements ComparisonOperator<P> {
     if (a is String && b is String) {
       return a.compareTo(b) < 0;
     }
-    throw TypeNotSupportedException('Less operator does not support type ${a.runtimeType}.');
+    throw TypeNotSupportedException(
+        'Less operator does not support type ${a.runtimeType}.');
   }
 
   @override
@@ -54,7 +52,8 @@ class LessOrEquals<P> implements ComparisonOperator<P> {
     if (a is String && b is String) {
       return a.compareTo(b) <= 0;
     }
-    throw TypeNotSupportedException('LessOrEquals operator does not support type ${a.runtimeType}.');
+    throw TypeNotSupportedException(
+        'LessOrEquals operator does not support type ${a.runtimeType}.');
   }
 
   @override
@@ -73,7 +72,8 @@ class Greater<P> implements ComparisonOperator<P> {
     if (a is String && b is String) {
       return a.compareTo(b) > 0;
     }
-    throw TypeNotSupportedException('Greater operator does not support type ${a.runtimeType}.');
+    throw TypeNotSupportedException(
+        'Greater operator does not support type ${a.runtimeType}.');
   }
 
   @override
@@ -92,15 +92,16 @@ class GreaterOrEquals<P> implements ComparisonOperator<P> {
     if (a is String && b is String) {
       return a.compareTo(b) >= 0;
     }
-    throw TypeNotSupportedException('GreaterOrEquals operator does not support type ${a.runtimeType}.');
+    throw TypeNotSupportedException(
+        'GreaterOrEquals operator does not support type ${a.runtimeType}.');
   }
 
   @override
   String toString() => '>=';
 }
 
-abstract class ArithmeticOperator<P extends num> implements BinaryOperator<P, P> {
-}
+abstract class ArithmeticOperator<P extends num>
+    implements BinaryOperator<P, P> {}
 
 class Plus<P extends num> implements ArithmeticOperator<P> {
   @override

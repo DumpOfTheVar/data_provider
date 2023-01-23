@@ -1,4 +1,3 @@
-
 import '../data_provider.dart';
 import '../exception.dart';
 import '../projector.dart';
@@ -26,7 +25,12 @@ class InMemoryDataProvider implements DataProvider {
   final Map<String, EntityMap> _data = {};
 
   @override
-  Future<List<EntityMap>> findAll({Specification? specification, Sorter? sorter, int? limit, int? offset}) {
+  Future<List<EntityMap>> findAll({
+    Specification? specification,
+    Sorter? sorter,
+    int? limit,
+    int? offset,
+  }) {
     final test = specificationMapper.map(specification);
     final compare = sorterMapper.map(sorter);
     return Future<List<EntityMap>>.delayed(_delay, () {
@@ -42,7 +46,10 @@ class InMemoryDataProvider implements DataProvider {
   }
 
   @override
-  Future<EntityMap?> findOne({required Specification specification, Sorter? sorter}) {
+  Future<EntityMap?> findOne({
+    required Specification specification,
+    Sorter? sorter,
+  }) {
     final test = specificationMapper.map(specification);
     final compare = sorterMapper.map(sorter);
     return Future<EntityMap?>.delayed(_delay, () {
@@ -84,10 +91,9 @@ typedef InMemoryProjector<V> = V Function(EntityMap);
 typedef InMemorySpecification = bool Function(EntityMap);
 typedef InMemorySorter = int Function(EntityMap, EntityMap);
 
-class InMemorySpecificationMapper extends SpecificationMapper<InMemorySpecification> {
-  InMemorySpecificationMapper({
-    required this.projectorMapper
-  });
+class InMemorySpecificationMapper
+    extends SpecificationMapper<InMemorySpecification> {
+  InMemorySpecificationMapper({required this.projectorMapper});
 
   final InMemoryProjectorMapper projectorMapper;
 
@@ -115,13 +121,15 @@ class InMemorySpecificationMapper extends SpecificationMapper<InMemorySpecificat
         return (EntityMap entityMap) => children.any((s) => s(entityMap));
       }
       throw TypeNotSupportedException(
-        'InMemoryDataProvider does not support specification type ${specification.runtimeType}.',
+        'InMemoryDataProvider does not support'
+        'specification type ${specification.runtimeType}.',
       );
     }
     if (specification is Compare) {
       final p1 = projectorMapper.map(specification.projector1);
       final p2 = projectorMapper.map(specification.projector2);
-      return (EntityMap entityMap) => specification.operator.apply(p1(entityMap), p2(entityMap));
+      return (EntityMap entityMap) =>
+          specification.operator.apply(p1(entityMap), p2(entityMap));
     }
     if (specification is CustomSpecification) {
       return map(specification.normalize());
@@ -133,9 +141,7 @@ class InMemorySpecificationMapper extends SpecificationMapper<InMemorySpecificat
 }
 
 class InMemorySorterMapper extends SorterMapper<InMemorySorter> {
-  InMemorySorterMapper({
-    required this.projectorMapper
-  });
+  InMemorySorterMapper({required this.projectorMapper});
 
   final InMemoryProjectorMapper projectorMapper;
 
@@ -146,8 +152,8 @@ class InMemorySorterMapper extends SorterMapper<InMemorySorter> {
     }
     if (sorter is CompositeSorter) {
       final children = sorter.children.map(map);
-      return (EntityMap a, EntityMap b) =>
-        children.map((sorter) => sorter(a, b))
+      return (EntityMap a, EntityMap b) => children
+          .map((sorter) => sorter(a, b))
           .firstWhere((result) => result != 0, orElse: () => 0);
     }
     if (sorter is CustomSorter) {
@@ -155,13 +161,13 @@ class InMemorySorterMapper extends SorterMapper<InMemorySorter> {
     }
     if (sorter is ValueSorter) {
       final projector = projectorMapper.map(sorter.projector);
-      return (EntityMap a, EntityMap b) => Sorter.compareValues(projector(a), projector(b), sorter.isAsc);
+      return (EntityMap a, EntityMap b) =>
+          Sorter.compareValues(projector(a), projector(b), sorter.isAsc);
     }
     throw TypeNotSupportedException(
       'InMemoryDataProvider does not support sorter type ${sorter.runtimeType}.',
     );
   }
-
 }
 
 class InMemoryProjectorMapper {
@@ -175,7 +181,8 @@ class InMemoryProjectorMapper {
     if (projector is BinaryExpression) {
       final p1 = map(projector.p1);
       final p2 = map(projector.p2);
-      return (EntityMap entityMap) => projector.operator.apply(p1(entityMap), p2(entityMap));
+      return (EntityMap entityMap) =>
+          projector.operator.apply(p1(entityMap), p2(entityMap));
     }
     throw TypeNotSupportedException(
       'InMemoryDataProvider does not support projector type ${projector.runtimeType}.',

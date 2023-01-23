@@ -1,4 +1,3 @@
-
 import 'package:data_provider/data_provider.dart';
 import 'package:data_provider/src/data_provider/in_memory.dart';
 import 'package:data_provider/src/projector.dart';
@@ -117,9 +116,12 @@ void main() {
         projectorMapper: InMemoryProjectorMapper(),
       );
       final specification1 = And<EntityStub>([]);
-      final specification2 = And<EntityStub>([True<EntityStub>(), True<EntityStub>()]);
-      final specification3 = And<EntityStub>([True<EntityStub>(), False<EntityStub>()]);
-      final specification4 = And<EntityStub>([False<EntityStub>(), False<EntityStub>()]);
+      final specification2 =
+          And<EntityStub>([True<EntityStub>(), True<EntityStub>()]);
+      final specification3 =
+          And<EntityStub>([True<EntityStub>(), False<EntityStub>()]);
+      final specification4 =
+          And<EntityStub>([False<EntityStub>(), False<EntityStub>()]);
       final entity = EntityStub('', 0, false);
 
       final mappedSpecification1 = mapper.map(specification1);
@@ -138,9 +140,12 @@ void main() {
         projectorMapper: InMemoryProjectorMapper(),
       );
       final specification1 = Or<EntityStub>([]);
-      final specification2 = Or<EntityStub>([True<EntityStub>(), True<EntityStub>()]);
-      final specification3 = Or<EntityStub>([True<EntityStub>(), False<EntityStub>()]);
-      final specification4 = Or<EntityStub>([False<EntityStub>(), False<EntityStub>()]);
+      final specification2 =
+          Or<EntityStub>([True<EntityStub>(), True<EntityStub>()]);
+      final specification3 =
+          Or<EntityStub>([True<EntityStub>(), False<EntityStub>()]);
+      final specification4 =
+          Or<EntityStub>([False<EntityStub>(), False<EntityStub>()]);
       final entity = EntityStub('', 0, false);
 
       final mappedSpecification1 = mapper.map(specification1);
@@ -246,9 +251,11 @@ void main() {
       final mapper = InMemorySorterMapper(
         projectorMapper: InMemoryProjectorMapper(),
       );
-      final sorter1 = ValueSorter<EntityStub>(FieldValue<EntityStub, String>('a'));
+      final sorter1 =
+          ValueSorter<EntityStub>(FieldValue<EntityStub, String>('a'));
       final sorter2 = ValueSorter<EntityStub>(FieldValue<EntityStub, num>('b'));
-      final sorter3 = ValueSorter<EntityStub>(FieldValue<EntityStub, bool>('c'));
+      final sorter3 =
+          ValueSorter<EntityStub>(FieldValue<EntityStub, bool>('c'));
       final x = EntityStub('', 0, false);
       final y = EntityStub('Test', 42, true);
       final z = EntityStub('Test_2', -100, false);
@@ -359,9 +366,12 @@ void main() {
       final mapper = InMemorySorterMapper(
         projectorMapper: InMemoryProjectorMapper(),
       );
-      final sorter1 = CustomSorterStub(ValueSorter<EntityStub>(FieldValue<EntityStub, String>('a')));
-      final sorter2 = CustomSorterStub(ValueSorter<EntityStub>(FieldValue<EntityStub, String>('b')));
-      final sorter3 = CustomSorterStub(ValueSorter<EntityStub>(FieldValue<EntityStub, String>('c')));
+      final sorter1 = CustomSorterStub(
+          ValueSorter<EntityStub>(FieldValue<EntityStub, String>('a')));
+      final sorter2 = CustomSorterStub(
+          ValueSorter<EntityStub>(FieldValue<EntityStub, String>('b')));
+      final sorter3 = CustomSorterStub(
+          ValueSorter<EntityStub>(FieldValue<EntityStub, String>('c')));
       final x = EntityStub('Test', 0, false);
       final y = EntityStub('Test', 42, true);
       final z = EntityStub('', 42, false);
@@ -405,8 +415,10 @@ void main() {
   group('in memory data provider', () {
     test('findAll without arguments returns all entries', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -426,8 +438,10 @@ void main() {
 
     test('findAll returns all entries satisfying specification', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -439,11 +453,14 @@ void main() {
         sorterMapper: sorterMapper,
         data: data,
       );
-      final specification1 = CompareFieldValue(field: 'id', value: 2, operator: Equals());
+      final specification1 =
+          CompareFieldValue(field: 'id', value: 2, operator: Equals());
       final sorter1 = FieldSorter({'id': true});
-      final specification2 = CompareFieldValue(field: 'id', value: 2, operator: Greater());
+      final specification2 =
+          CompareFieldValue(field: 'id', value: 2, operator: Greater());
       final sorter2 = FieldSorter({'id': true});
-      final specification3 = CompareFieldValue(field: 'title', value: 'Test_2', operator: Equals());
+      final specification3 = CompareFieldValue(
+          field: 'title', value: 'Test_2', operator: Equals());
       final sorter3 = FieldSorter({'id': false});
 
       final result1 = await dataProvider.findAll(
@@ -466,8 +483,10 @@ void main() {
 
     test('findById returns entry with specified id', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -495,8 +514,10 @@ void main() {
 
     test('findOne returns entry that satisfies specification', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -514,19 +535,28 @@ void main() {
       final sorter2 = ValueSorter(FieldValue('id'), false);
       final specification3 = False();
       final sorter3 = null;
-      final specification4 = CompareFieldValue(field: 'title', value: 'Test', operator: Equals());
+      final specification4 =
+          CompareFieldValue(field: 'title', value: 'Test', operator: Equals());
       final sorter4 = null;
-      final specification5 = CompareFieldValue(field: 'title', value: 'Test_2', operator: Equals());
+      final specification5 = CompareFieldValue(
+          field: 'title', value: 'Test_2', operator: Equals());
       final sorter5 = ValueSorter(FieldValue('id'));
-      final specification6 = CompareFieldValue(field: 'title', value: 'Test_2', operator: Equals());
+      final specification6 = CompareFieldValue(
+          field: 'title', value: 'Test_2', operator: Equals());
       final sorter6 = ValueSorter(FieldValue('id'), false);
 
-      final result1 = await dataProvider.findOne(specification: specification1, sorter: sorter1);
-      final result2 = await dataProvider.findOne(specification: specification2, sorter: sorter2);
-      final result3 = await dataProvider.findOne(specification: specification3, sorter: sorter3);
-      final result4 = await dataProvider.findOne(specification: specification4, sorter: sorter4);
-      final result5 = await dataProvider.findOne(specification: specification5, sorter: sorter5);
-      final result6 = await dataProvider.findOne(specification: specification6, sorter: sorter6);
+      final result1 = await dataProvider.findOne(
+          specification: specification1, sorter: sorter1);
+      final result2 = await dataProvider.findOne(
+          specification: specification2, sorter: sorter2);
+      final result3 = await dataProvider.findOne(
+          specification: specification3, sorter: sorter3);
+      final result4 = await dataProvider.findOne(
+          specification: specification4, sorter: sorter4);
+      final result5 = await dataProvider.findOne(
+          specification: specification5, sorter: sorter5);
+      final result6 = await dataProvider.findOne(
+          specification: specification6, sorter: sorter6);
 
       expect(result1, data[0]);
       expect(result2, data[3]);
@@ -538,10 +568,10 @@ void main() {
 
     test('saveOne saves new entry', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(
-          projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(
-          projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -567,10 +597,10 @@ void main() {
 
     test('saveOne replaces existing entry', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(
-          projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(
-          projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -595,10 +625,10 @@ void main() {
 
     test('saveAll saves entries', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(
-          projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(
-          projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -627,10 +657,10 @@ void main() {
 
     test('deleteById deletes existing entry', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(
-          projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(
-          projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -654,10 +684,10 @@ void main() {
 
     test('deleteById ignores not existing entry', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(
-          projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(
-          projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -679,12 +709,13 @@ void main() {
       expect(await dataProvider.findById('4'), data[3]);
     });
 
-    test('deleteAll deletes no entries if none satisfies specification', () async {
+    test('deleteAll deletes no entries if none satisfies specification',
+        () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(
-          projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(
-          projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -703,12 +734,13 @@ void main() {
       expect(await dataProvider.findAll(), data);
     });
 
-    test('deleteAll deletes all entries if all satisfy specification', () async {
+    test('deleteAll deletes all entries if all satisfy specification',
+        () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(
-          projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(
-          projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -729,10 +761,10 @@ void main() {
 
     test('deleteAll deletes all entries that satisfy specification', () async {
       final projectorMapper = InMemoryProjectorMapper();
-      final specificationMapper = InMemorySpecificationMapper(
-          projectorMapper: projectorMapper);
-      final sorterMapper = InMemorySorterMapper(
-          projectorMapper: projectorMapper);
+      final specificationMapper =
+          InMemorySpecificationMapper(projectorMapper: projectorMapper);
+      final sorterMapper =
+          InMemorySorterMapper(projectorMapper: projectorMapper);
       final data = [
         {'id': 1, 'title': ''},
         {'id': 2, 'title': 'Test'},
@@ -744,7 +776,8 @@ void main() {
         sorterMapper: sorterMapper,
         data: data,
       );
-      final specification = CompareFieldValue(field: 'title', value: 'Test_2', operator: Equals());
+      final specification = CompareFieldValue(
+          field: 'title', value: 'Test_2', operator: Equals());
 
       await dataProvider.deleteAll(specification);
 
