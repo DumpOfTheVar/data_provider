@@ -71,7 +71,7 @@ jobs:
         working-directory: pkgs/data_provider
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: pkgs/data_provider_sqlite; dart analyze
@@ -110,7 +110,7 @@ jobs:
         working-directory: pkgs/data_provider
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: "pkgs/data_provider_sqlite; dart format --output=none --set-exit-if-changed ."
@@ -149,7 +149,7 @@ jobs:
         working-directory: pkgs/data_provider
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: pkgs/data_provider_sqlite; dart analyze
@@ -188,7 +188,7 @@ jobs:
         working-directory: pkgs/data_provider
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: "pkgs/data_provider_sqlite; dart format --output=none --set-exit-if-changed ."
@@ -227,7 +227,7 @@ jobs:
         working-directory: pkgs/data_provider
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: pkgs/data_provider_sqlite; dart test
@@ -272,7 +272,7 @@ jobs:
         working-directory: pkgs/data_provider
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: pkgs/data_provider_sqlite; dart test
@@ -346,7 +346,7 @@ jobs:
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: pkgs/data_provider_sqlite; dart test
@@ -422,7 +422,7 @@ jobs:
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: pkgs/data_provider_sqlite; dart test
@@ -478,7 +478,7 @@ jobs:
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: pkgs/data_provider_sqlite; dart test
@@ -534,7 +534,7 @@ jobs:
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
       - id: pkgs_data_provider_sqlite_pub_upgrade
         name: pkgs/data_provider_sqlite; dart pub upgrade
-        run: dart pub upgrade
+        run: flutter pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
         working-directory: pkgs/data_provider_sqlite
       - name: pkgs/data_provider_sqlite; dart test
