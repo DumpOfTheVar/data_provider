@@ -1,3 +1,8 @@
 ## 0.1.0
 
 - Initial version.
+
+## 0.1.1
+
+- Added UnaryExpressionProjector projector
+- Added UnaryExpressionProjector mapping for in memory data provider
