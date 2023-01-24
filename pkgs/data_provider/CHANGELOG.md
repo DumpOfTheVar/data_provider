@@ -10,3 +10,6 @@
 ## 0.1.2
 - Added toString() method to arithmetic operators
 - Added projector export in library
+
+## 0.1.3
+- Added DataConverter
