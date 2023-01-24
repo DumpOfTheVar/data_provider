@@ -1,5 +1,4 @@
 import 'package:data_provider/data_provider.dart';
-import 'package:data_provider/src/projector.dart';
 
 abstract class Sorter<T> {
   int compare(T a, T b);
