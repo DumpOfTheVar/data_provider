@@ -15,3 +15,7 @@
 - Added SqliteSpecificationMapper
 - Added SqliteSorterMapper
 - Added tests
+
+## 0.1.2
+- Downgrade versions of dependencies
+- Add min flutter sdk version
