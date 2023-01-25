@@ -1,4 +1,5 @@
 import 'package:data_provider/data_provider.dart';
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SqliteDataProvider extends DataProvider {
@@ -338,4 +339,39 @@ class SqliteSorterMapper extends SorterMapper<String?> {
     throw TypeNotSupportedException('SqliteDataProvider does not support '
         'sorter type ${sorter.runtimeType}.');
   }
+}
+
+SqliteDataProvider buildSqliteDataProvider({
+  required String dbName,
+  required String tableName,
+  Map<String, String> fieldMap = const {},
+  Map<String, Function(dynamic)> valueMap = const {},
+  Map<String, Function(dynamic)> reversedValueMap = const {},
+}) {
+  final dataConverter = DataConverter(
+    fieldMap: fieldMap,
+    valueMap: valueMap,
+    reversedValueMap: reversedValueMap,
+  );
+  final unaryOperatorMapper = SqliteUnaryOperatorMapper();
+  final binaryOperatorMapper = SqliteBinaryOperatorMapper();
+  final projectorMapper = SqliteProjectorMapper(
+    dataConverter: dataConverter,
+    unaryOperatorMapper: unaryOperatorMapper,
+    binaryOperatorMapper: binaryOperatorMapper,
+  );
+  final specificationMapper = SqliteSpecificationMapper(
+    projectorMapper: projectorMapper,
+    binaryOperatorMapper: binaryOperatorMapper,
+  );
+  final sorterMapper = SqliteSorterMapper(
+    projectorMapper: projectorMapper,
+  );
+  return SqliteDataProvider(
+    dbFactory: () async => openDatabase(join(await getDatabasesPath(), dbName)),
+    tableName: tableName,
+    dataConverter: dataConverter,
+    specificationMapper: specificationMapper,
+    sorterMapper: sorterMapper,
+  );
 }

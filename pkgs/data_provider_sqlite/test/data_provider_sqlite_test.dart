@@ -923,6 +923,16 @@ void main() {
           .called(1);
     });
   });
+
+  group('in memory data provider builder', () {
+    test('creates in memory data provider', () {
+      final dataProvider = buildSqliteDataProvider(
+        dbName: 'test_db',
+        tableName: 'test_table',
+      );
+      expect(dataProvider, isA<SqliteDataProvider>());
+    });
+  });
 }
 
 DataProvider makeDataProvider(Database db) {

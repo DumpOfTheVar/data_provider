@@ -22,3 +22,6 @@
 
 ## 0.1.3
 - Fix dbFactory type in SqliteDataProvider
+
+# 0.1.4
+- Added buildSqliteDataProvider function
