@@ -23,11 +23,11 @@
 ## 0.1.3
 - Fix dbFactory type in SqliteDataProvider
 
-# 0.1.4
+## 0.1.4
 - Added buildSqliteDataProvider function
 
-# 0.1.5
+## 0.1.5
 - Added migrations support for buildSqliteDataProvider function
 
-# 0.1.5
+## 0.1.5
 - Fixed bug with boolean literal
