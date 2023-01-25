@@ -10,7 +10,7 @@ class SqliteDataProvider extends DataProvider {
     required this.dataConverter,
   });
 
-  final Database Function() dbFactory;
+  final Future<Database> Function() dbFactory;
   final String tableName;
   final SqliteSpecificationMapper specificationMapper;
   final SqliteSorterMapper sorterMapper;
@@ -121,7 +121,7 @@ class SqliteDataProvider extends DataProvider {
   }
 
   Future<Database> _getDb() async {
-    return _db ??= dbFactory();
+    return _db ??= await dbFactory();
   }
 }
 

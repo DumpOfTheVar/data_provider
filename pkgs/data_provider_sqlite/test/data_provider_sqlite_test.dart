@@ -942,7 +942,7 @@ DataProvider makeDataProvider(Database db) {
     projectorMapper: projectorMapper,
   );
   return SqliteDataProvider(
-    dbFactory: () => db,
+    dbFactory: () => Future.value(db),
     tableName: 'test_table',
     specificationMapper: specificationMapper,
     sorterMapper: sorterMapper,

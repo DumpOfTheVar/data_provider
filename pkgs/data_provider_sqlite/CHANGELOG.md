@@ -19,3 +19,6 @@
 ## 0.1.2
 - Downgrade versions of dependencies
 - Add min flutter sdk version
+
+## 0.1.3
+- Fix dbFactory type in SqliteDataProvider
