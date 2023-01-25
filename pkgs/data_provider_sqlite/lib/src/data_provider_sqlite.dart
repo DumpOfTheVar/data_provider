@@ -344,6 +344,7 @@ class SqliteSorterMapper extends SorterMapper<String?> {
 SqliteDataProvider buildSqliteDataProvider({
   required String dbName,
   required String tableName,
+  List<String> migrations = const <String>[],
   Map<String, String> fieldMap = const {},
   Map<String, Function(dynamic)> valueMap = const {},
   Map<String, Function(dynamic)> reversedValueMap = const {},
@@ -368,10 +369,33 @@ SqliteDataProvider buildSqliteDataProvider({
     projectorMapper: projectorMapper,
   );
   return SqliteDataProvider(
-    dbFactory: () async => openDatabase(join(await getDatabasesPath(), dbName)),
+    dbFactory: () async => _buildDb(dbName, migrations),
     tableName: tableName,
     dataConverter: dataConverter,
     specificationMapper: specificationMapper,
     sorterMapper: sorterMapper,
   );
+}
+
+Future<Database> _buildDb(String dbName, List<String> migrations) async {
+  return openDatabase(
+    join(await getDatabasesPath(), dbName),
+    onCreate: (db, version) => _migrate(db, 0, version, migrations),
+    onUpgrade: (db, oldVer, newVer) => _migrate(db, oldVer, newVer, migrations),
+    version: migrations.length,
+  );
+}
+
+Future<void> _migrate(
+  Database db,
+  int oldVersion,
+  int newVersion,
+  List<String> migrations,
+) async {
+  if (newVersion <= oldVersion) {
+    return;
+  }
+  migrations
+      .sublist(oldVersion)
+      .forEach((migration) async => await db.execute(migration));
 }

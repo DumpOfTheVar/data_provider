@@ -25,3 +25,6 @@
 
 # 0.1.4
 - Added buildSqliteDataProvider function
+
+# 0.1.5
+- Added migrations support for buildSqliteDataProvider function
