@@ -194,3 +194,17 @@ class InMemorySorterMapper extends SorterMapper<InMemorySorter> {
     );
   }
 }
+
+InMemoryDataProvider buildInMemoryDataProvider() {
+  final projectorMapper = InMemoryProjectorMapper();
+  final specificationMapper = InMemorySpecificationMapper(
+    projectorMapper: projectorMapper,
+  );
+  final sorterMapper = InMemorySorterMapper(
+    projectorMapper: projectorMapper,
+  );
+  return InMemoryDataProvider(
+    specificationMapper: specificationMapper,
+    sorterMapper: sorterMapper,
+  );
+}

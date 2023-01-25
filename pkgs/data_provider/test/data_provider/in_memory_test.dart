@@ -802,6 +802,13 @@ void main() {
       expect(await dataProvider.findAll(), [data[0], data[1]]);
     });
   });
+
+  group('in memory data provider builder', () {
+    test('creates in memory data provider', () {
+      final dataProvider = buildInMemoryDataProvider();
+      expect(dataProvider, isA<InMemoryDataProvider>());
+    });
+  });
 }
 
 class EntityStub implements Serializable {
