@@ -1,6 +1,5 @@
 import 'package:data_provider/data_provider.dart';
 import 'package:data_provider/src/data_provider/in_memory.dart';
-import 'package:data_provider/src/projector.dart';
 import 'package:test/test.dart';
 
 void main() {

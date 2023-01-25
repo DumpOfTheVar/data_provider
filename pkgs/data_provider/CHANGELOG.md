@@ -16,3 +16,6 @@
 
 # 0.1.4
 - Downgrade min sdk version
+
+# 0.1.5
+- Fix min sdk version
