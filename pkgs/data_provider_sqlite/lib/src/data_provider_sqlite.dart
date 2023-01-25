@@ -222,7 +222,7 @@ class SqliteProjectorMapper extends ProjectorMapper<SqliteExpression> {
   SqliteExpression map(Projector projector) {
     if (projector is ConstValue) {
       if (projector.value is bool) {
-        return SqliteExpression(projector.value ? 'TRUE' : 'FALSE', []);
+        return SqliteExpression(projector.value ? '1' : '0', []);
       }
       return SqliteExpression('?', [projector.value.toString()]);
     }
@@ -260,13 +260,13 @@ class SqliteSpecificationMapper extends SpecificationMapper<SqliteExpression> {
   @override
   SqliteExpression map(Specification? specification) {
     if (specification == null) {
-      return SqliteExpression('TRUE', <String>[]);
+      return SqliteExpression('1', <String>[]);
     }
     if (specification is True) {
-      return SqliteExpression('TRUE', <String>[]);
+      return SqliteExpression('1', <String>[]);
     }
     if (specification is False) {
-      return SqliteExpression('FALSE', <String>[]);
+      return SqliteExpression('0', <String>[]);
     }
     if (specification is Not) {
       final child = map(specification.child);
@@ -276,12 +276,12 @@ class SqliteSpecificationMapper extends SpecificationMapper<SqliteExpression> {
       final operator;
       if (specification is And) {
         if (specification.children.isEmpty) {
-          return SqliteExpression('TRUE', []);
+          return SqliteExpression('1', []);
         }
         operator = 'AND';
       } else if (specification is Or) {
         if (specification.children.isEmpty) {
-          return SqliteExpression('FALSE', []);
+          return SqliteExpression('0', []);
         }
         operator = 'OR';
       } else {

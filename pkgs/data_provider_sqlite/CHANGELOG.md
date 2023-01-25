@@ -28,3 +28,6 @@
 
 # 0.1.5
 - Added migrations support for buildSqliteDataProvider function
+
+# 0.1.5
+- Fixed bug with boolean literal

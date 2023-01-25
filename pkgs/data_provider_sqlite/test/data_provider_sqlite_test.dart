@@ -257,7 +257,7 @@ void main() {
       expect(expression1.args, ['42']);
       expect(expression2.expression, '?');
       expect(expression2.args, ['Test']);
-      expect(expression3.expression, 'TRUE');
+      expect(expression3.expression, '1');
       expect(expression3.args, []);
     });
 
@@ -363,7 +363,7 @@ void main() {
 
       final expression = mapper.map(null);
 
-      expect(expression.expression, 'TRUE');
+      expect(expression.expression, '1');
       expect(expression.args, []);
     });
 
@@ -386,9 +386,9 @@ void main() {
       final expression1 = mapper.map(specification1);
       final expression2 = mapper.map(specification2);
 
-      expect(expression1.expression, 'TRUE');
+      expect(expression1.expression, '1');
       expect(expression1.args, []);
-      expect(expression2.expression, 'FALSE');
+      expect(expression2.expression, '0');
       expect(expression2.args, []);
     });
 
@@ -409,7 +409,7 @@ void main() {
 
       final expression = mapper.map(specification);
 
-      expect(expression.expression, 'TRUE');
+      expect(expression.expression, '1');
       expect(expression.args, []);
     });
 
@@ -430,7 +430,7 @@ void main() {
 
       final expression = mapper.map(specification);
 
-      expect(expression.expression, 'FALSE');
+      expect(expression.expression, '0');
       expect(expression.args, []);
     });
 
@@ -453,9 +453,9 @@ void main() {
       final expression1 = mapper.map(specification1);
       final expression2 = mapper.map(specification2);
 
-      expect(expression1.expression, 'NOT (TRUE)');
+      expect(expression1.expression, 'NOT (1)');
       expect(expression1.args, []);
-      expect(expression2.expression, 'NOT (FALSE)');
+      expect(expression2.expression, 'NOT (0)');
       expect(expression2.args, []);
     });
 
@@ -488,19 +488,19 @@ void main() {
       final expression6 = mapper.map(specification6);
       final expression7 = mapper.map(specification7);
 
-      expect(expression1.expression, 'TRUE');
+      expect(expression1.expression, '1');
       expect(expression1.args, []);
-      expect(expression2.expression, '(TRUE)');
+      expect(expression2.expression, '(1)');
       expect(expression2.args, []);
-      expect(expression3.expression, '(FALSE)');
+      expect(expression3.expression, '(0)');
       expect(expression3.args, []);
-      expect(expression4.expression, '(TRUE) AND (TRUE) AND (TRUE)');
+      expect(expression4.expression, '(1) AND (1) AND (1)');
       expect(expression4.args, []);
-      expect(expression5.expression, '(TRUE) AND (FALSE) AND (TRUE)');
+      expect(expression5.expression, '(1) AND (0) AND (1)');
       expect(expression5.args, []);
-      expect(expression6.expression, '(FALSE) AND (TRUE) AND (FALSE)');
+      expect(expression6.expression, '(0) AND (1) AND (0)');
       expect(expression6.args, []);
-      expect(expression7.expression, '(FALSE) AND (FALSE) AND (FALSE)');
+      expect(expression7.expression, '(0) AND (0) AND (0)');
       expect(expression7.args, []);
     });
 
@@ -533,19 +533,19 @@ void main() {
       final expression6 = mapper.map(specification6);
       final expression7 = mapper.map(specification7);
 
-      expect(expression1.expression, 'FALSE');
+      expect(expression1.expression, '0');
       expect(expression1.args, []);
-      expect(expression2.expression, '(TRUE)');
+      expect(expression2.expression, '(1)');
       expect(expression2.args, []);
-      expect(expression3.expression, '(FALSE)');
+      expect(expression3.expression, '(0)');
       expect(expression3.args, []);
-      expect(expression4.expression, '(TRUE) OR (TRUE) OR (TRUE)');
+      expect(expression4.expression, '(1) OR (1) OR (1)');
       expect(expression4.args, []);
-      expect(expression5.expression, '(TRUE) OR (FALSE) OR (TRUE)');
+      expect(expression5.expression, '(1) OR (0) OR (1)');
       expect(expression5.args, []);
-      expect(expression6.expression, '(FALSE) OR (TRUE) OR (FALSE)');
+      expect(expression6.expression, '(0) OR (1) OR (0)');
       expect(expression6.args, []);
-      expect(expression7.expression, '(FALSE) OR (FALSE) OR (FALSE)');
+      expect(expression7.expression, '(0) OR (0) OR (0)');
       expect(expression7.args, []);
     });
 
@@ -807,13 +807,13 @@ void main() {
           'title': 'Test_2',
         },
       ];
-      when(db.query('test_table', where: 'TRUE', whereArgs: []))
+      when(db.query('test_table', where: '1', whereArgs: []))
           .thenAnswer((_) => Future.value(data));
       final dataProvider = makeDataProvider(db);
 
       final result = await dataProvider.findAll();
 
-      verify(db.query('test_table', where: 'TRUE', whereArgs: [])).called(1);
+      verify(db.query('test_table', where: '1', whereArgs: [])).called(1);
       expect(result, data);
     });
 
