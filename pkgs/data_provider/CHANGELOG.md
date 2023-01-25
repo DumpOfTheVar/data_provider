@@ -13,3 +13,6 @@
 
 ## 0.1.3
 - Added DataConverter
+
+# 0.1.4
+- Downgrade min sdk version
