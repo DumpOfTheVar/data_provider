@@ -2,6 +2,78 @@ import 'package:data_provider/data_provider.dart';
 import 'package:test/test.dart';
 
 void main() {
+  group('default field converters', () {
+    test('converts to data', () {
+      final fieldConverter = DefaultFieldConverter();
+
+      expect(fieldConverter.convertToData('test'), 'test');
+      expect(fieldConverter.convertToData('testField'), 'testField');
+      expect(fieldConverter.convertToData('longTestField'), 'longTestField');
+      expect(fieldConverter.convertToData('test_field'), 'test_field');
+      expect(
+          fieldConverter.convertToData('long_test_field'), 'long_test_field');
+    });
+
+    test('converts from data', () {
+      final fieldConverter = DefaultFieldConverter();
+
+      expect(fieldConverter.convertFromData('test'), 'test');
+      expect(fieldConverter.convertFromData('testField'), 'testField');
+      expect(fieldConverter.convertFromData('longTestField'), 'longTestField');
+      expect(fieldConverter.convertFromData('test_field'), 'test_field');
+      expect(
+          fieldConverter.convertFromData('long_test_field'), 'long_test_field');
+    });
+  });
+
+  group('camel to snake field converters', () {
+    test('converts to data', () {
+      final fieldConverter = CamelToSnakeFieldConverter();
+
+      expect(fieldConverter.convertToData('test'), 'test');
+      expect(fieldConverter.convertToData('testField'), 'test_field');
+      expect(fieldConverter.convertToData('longTestField'), 'long_test_field');
+      expect(fieldConverter.convertToData('test_field'), 'test_field');
+      expect(
+          fieldConverter.convertToData('long_test_field'), 'long_test_field');
+    });
+
+    test('converts from data', () {
+      final fieldConverter = CamelToSnakeFieldConverter();
+
+      expect(fieldConverter.convertFromData('test'), 'test');
+      expect(fieldConverter.convertFromData('testField'), 'testField');
+      expect(fieldConverter.convertFromData('longTestField'), 'longTestField');
+      expect(fieldConverter.convertFromData('test_field'), 'testField');
+      expect(
+          fieldConverter.convertFromData('long_test_field'), 'longTestField');
+    });
+  });
+
+  group('snake to camel field converters', () {
+    test('converts to data', () {
+      final fieldConverter = SnakeToCamelFieldConverter();
+
+      expect(fieldConverter.convertToData('test'), 'test');
+      expect(fieldConverter.convertToData('testField'), 'testField');
+      expect(fieldConverter.convertToData('longTestField'), 'longTestField');
+      expect(fieldConverter.convertToData('test_field'), 'testField');
+      expect(fieldConverter.convertToData('long_test_field'), 'longTestField');
+    });
+
+    test('converts from data', () {
+      final fieldConverter = SnakeToCamelFieldConverter();
+
+      expect(fieldConverter.convertFromData('test'), 'test');
+      expect(fieldConverter.convertFromData('testField'), 'test_field');
+      expect(
+          fieldConverter.convertFromData('longTestField'), 'long_test_field');
+      expect(fieldConverter.convertFromData('test_field'), 'test_field');
+      expect(
+          fieldConverter.convertFromData('long_test_field'), 'long_test_field');
+    });
+  });
+
   group('data converter', () {
     test('does not change data by default', () {
       final dataConverter = DataConverter();
@@ -40,6 +112,32 @@ void main() {
       expect(dataConverter.convertFieldToData('test_field'), 'test_field');
       expect(dataConverter.convertFieldFromData('testField'), 'testField');
       expect(dataConverter.convertFieldFromData('test_field'), 'test_field');
+      expect(dataConverter.convertToData(json1), json2);
+      expect(dataConverter.convertFromData(json2), json1);
+    });
+
+    test('converts field name with fieldConverter', () {
+      final dataConverter = DataConverter(
+        fieldMap: {'firstField': 'another_name'},
+        fieldConverter: CamelToSnakeFieldConverter(),
+      );
+      final json1 = {
+        'firstField': 'Test',
+        'second_field': 42,
+        'THIRD_FIELD': true,
+      };
+      final json2 = {
+        'another_name': 'Test',
+        'second_field': 42,
+        'THIRD_FIELD': true,
+      };
+
+      expect(dataConverter.convertFieldToData('firstField'), 'another_name');
+      expect(dataConverter.convertFieldFromData('another_name'), 'firstField');
+      expect(dataConverter.convertFieldToData('testField'), 'test_field');
+      expect(dataConverter.convertFieldToData('test_field'), 'test_field');
+      expect(dataConverter.convertFieldFromData('testField'), 'testField');
+      expect(dataConverter.convertFieldFromData('test_field'), 'testField');
       expect(dataConverter.convertToData(json1), json2);
       expect(dataConverter.convertFromData(json2), json1);
     });

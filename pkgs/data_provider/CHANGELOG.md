@@ -22,3 +22,6 @@
 
 ## 0.1.6
 - Added buildImMemoryDataProvider function
+
+## 0.1.7
+- Added field converters
