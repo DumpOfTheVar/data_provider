@@ -20,8 +20,8 @@ import 'package:sqflite_common/sqlite_api.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeQueryCursor_0 extends _i1.SmartFake implements _i2.QueryCursor {
-  _FakeQueryCursor_0(
+class _FakeDatabase_0 extends _i1.SmartFake implements _i2.Database {
+  _FakeDatabase_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -30,8 +30,18 @@ class _FakeQueryCursor_0 extends _i1.SmartFake implements _i2.QueryCursor {
         );
 }
 
-class _FakeBatch_1 extends _i1.SmartFake implements _i2.Batch {
-  _FakeBatch_1(
+class _FakeQueryCursor_1 extends _i1.SmartFake implements _i2.QueryCursor {
+  _FakeQueryCursor_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeBatch_2 extends _i1.SmartFake implements _i2.Batch {
+  _FakeBatch_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -57,6 +67,18 @@ class MockDatabase extends _i1.Mock implements _i2.Database {
         returnValueForMissingStub: false,
       ) as bool);
   @override
+  _i2.Database get database => (super.noSuchMethod(
+        Invocation.getter(#database),
+        returnValue: _FakeDatabase_0(
+          this,
+          Invocation.getter(#database),
+        ),
+        returnValueForMissingStub: _FakeDatabase_0(
+          this,
+          Invocation.getter(#database),
+        ),
+      ) as _i2.Database);
+  @override
   _i3.Future<void> close() => (super.noSuchMethod(
         Invocation.method(
           #close,
@@ -80,27 +102,9 @@ class MockDatabase extends _i1.Mock implements _i2.Database {
         returnValueForMissingStub: _i3.Future<T>.value(null),
       ) as _i3.Future<T>);
   @override
-  _i3.Future<int> getVersion() => (super.noSuchMethod(
-        Invocation.method(
-          #getVersion,
-          [],
-        ),
-        returnValue: _i3.Future<int>.value(0),
-        returnValueForMissingStub: _i3.Future<int>.value(0),
-      ) as _i3.Future<int>);
-  @override
-  _i3.Future<void> setVersion(int? version) => (super.noSuchMethod(
-        Invocation.method(
-          #setVersion,
-          [version],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-  @override
   _i3.Future<T> devInvokeMethod<T>(
     String? method, [
-    dynamic arguments,
+    Object? arguments,
   ]) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -252,7 +256,7 @@ class MockDatabase extends _i1.Mock implements _i2.Database {
           ],
           {#bufferSize: bufferSize},
         ),
-        returnValue: _i3.Future<_i2.QueryCursor>.value(_FakeQueryCursor_0(
+        returnValue: _i3.Future<_i2.QueryCursor>.value(_FakeQueryCursor_1(
           this,
           Invocation.method(
             #rawQueryCursor,
@@ -264,7 +268,7 @@ class MockDatabase extends _i1.Mock implements _i2.Database {
           ),
         )),
         returnValueForMissingStub:
-            _i3.Future<_i2.QueryCursor>.value(_FakeQueryCursor_0(
+            _i3.Future<_i2.QueryCursor>.value(_FakeQueryCursor_1(
           this,
           Invocation.method(
             #rawQueryCursor,
@@ -307,7 +311,7 @@ class MockDatabase extends _i1.Mock implements _i2.Database {
             #bufferSize: bufferSize,
           },
         ),
-        returnValue: _i3.Future<_i2.QueryCursor>.value(_FakeQueryCursor_0(
+        returnValue: _i3.Future<_i2.QueryCursor>.value(_FakeQueryCursor_1(
           this,
           Invocation.method(
             #queryCursor,
@@ -327,7 +331,7 @@ class MockDatabase extends _i1.Mock implements _i2.Database {
           ),
         )),
         returnValueForMissingStub:
-            _i3.Future<_i2.QueryCursor>.value(_FakeQueryCursor_0(
+            _i3.Future<_i2.QueryCursor>.value(_FakeQueryCursor_1(
           this,
           Invocation.method(
             #queryCursor,
@@ -427,14 +431,14 @@ class MockDatabase extends _i1.Mock implements _i2.Database {
           #batch,
           [],
         ),
-        returnValue: _FakeBatch_1(
+        returnValue: _FakeBatch_2(
           this,
           Invocation.method(
             #batch,
             [],
           ),
         ),
-        returnValueForMissingStub: _FakeBatch_1(
+        returnValueForMissingStub: _FakeBatch_2(
           this,
           Invocation.method(
             #batch,
