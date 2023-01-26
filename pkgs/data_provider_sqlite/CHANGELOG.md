@@ -29,5 +29,8 @@
 ## 0.1.5
 - Added migrations support for buildSqliteDataProvider function
 
-## 0.1.5
+## 0.1.6
 - Fixed bug with boolean literal
+
+## 0.1.7
+- Added field converters support

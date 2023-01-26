@@ -346,11 +346,13 @@ SqliteDataProvider buildSqliteDataProvider({
   required String tableName,
   List<String> migrations = const <String>[],
   Map<String, String> fieldMap = const {},
+  FieldConverter fieldConverter = const CamelToSnakeFieldConverter(),
   Map<String, Function(dynamic)> valueMap = const {},
   Map<String, Function(dynamic)> reversedValueMap = const {},
 }) {
   final dataConverter = DataConverter(
     fieldMap: fieldMap,
+    fieldConverter: fieldConverter,
     valueMap: valueMap,
     reversedValueMap: reversedValueMap,
   );
