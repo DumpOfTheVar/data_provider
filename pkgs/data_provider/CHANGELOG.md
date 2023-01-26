@@ -25,3 +25,6 @@
 
 ## 0.1.7
 - Added field converters
+
+## 0.1.8
+- Fixed bug with field converters in DataConverter

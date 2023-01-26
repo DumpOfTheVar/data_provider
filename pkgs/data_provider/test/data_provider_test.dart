@@ -123,13 +123,13 @@ void main() {
       );
       final json1 = {
         'firstField': 'Test',
-        'second_field': 42,
-        'THIRD_FIELD': true,
+        'secondField': 42,
+        'thirdField': true,
       };
       final json2 = {
         'another_name': 'Test',
         'second_field': 42,
-        'THIRD_FIELD': true,
+        'third_field': true,
       };
 
       expect(dataConverter.convertFieldToData('firstField'), 'another_name');
