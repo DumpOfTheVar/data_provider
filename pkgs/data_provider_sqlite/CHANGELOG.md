@@ -34,3 +34,6 @@
 
 ## 0.1.7
 - Added field converters support
+
+## 0.1.7
+- Upgraded data_provider version to fix bug in DataConverter

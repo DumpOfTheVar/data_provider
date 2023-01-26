@@ -1,6 +1,6 @@
 name: data_provider_sqlite
 description: Sqlite data provider
-version: 0.1.8
+version: 0.1.9
 homepage: https://github.com/DumpOfTheVar/data_provider
 
 environment:
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  data_provider: ^0.1.7
+  data_provider: ^0.1.8
   path: ^1.8.0
   sqflite: ^2.0.1
 
