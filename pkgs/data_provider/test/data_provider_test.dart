@@ -83,7 +83,7 @@ void main() {
       expect(valueConverter.convertToData(true), true);
       expect(valueConverter.convertToData({'field': 42}), {'field': 42});
       expect(valueConverter.convertToData([1, 2, 3]), [1, 2, 3]);
-      expect(valueConverter.convertToData(DateTime(100500)), DateTime(100500));
+      expect(valueConverter.convertToData(DateTime(10000)), DateTime(10000));
     });
 
     test('converts from data', () {
@@ -94,8 +94,78 @@ void main() {
       expect(valueConverter.convertFromData(true), true);
       expect(valueConverter.convertFromData({'field': 42}), {'field': 42});
       expect(valueConverter.convertFromData([1, 2, 3]), [1, 2, 3]);
+      expect(valueConverter.convertFromData(DateTime(10000)), DateTime(10000));
+    });
+  });
+
+  group('num to string value converter', () {
+    test('converts to data', () {
+      final valueConverter = NumToStringValueConverter();
+
+      expect(valueConverter.convertToData(42), '42');
+      expect(valueConverter.convertToData(-42), '-42');
+      expect(valueConverter.convertToData(36.6), '36.6');
+      expect(valueConverter.convertToData(-36.6), '-36.6');
+    });
+
+    test('converts from data', () {
+      final valueConverter = NumToStringValueConverter();
+
+      expect(valueConverter.convertFromData('42'), 42);
+      expect(valueConverter.convertFromData('-42'), -42);
+      expect(valueConverter.convertFromData('36.6'), 36.6);
+      expect(valueConverter.convertFromData('-36.6'), -36.6);
+    });
+  });
+
+  group('bool to string value converter', () {
+    test('converts to data', () {
+      final valueConverter = BoolToStringValueConverter();
+
+      expect(valueConverter.convertToData(true), '1');
+      expect(valueConverter.convertToData(false), '0');
+    });
+
+    test('converts from data', () {
+      final valueConverter = BoolToStringValueConverter();
+
+      expect(valueConverter.convertFromData('1'), true);
+      expect(valueConverter.convertFromData('0'), false);
+    });
+  });
+
+  group('date time to string value converter', () {
+    test('converts to data', () {
+      final valueConverter = DateTimeToStringValueConverter();
+
       expect(
-          valueConverter.convertFromData(DateTime(100500)), DateTime(100500));
+        valueConverter
+            .convertToData(DateTime.parse('1991-08-24 12:34:56Z').toLocal()),
+        '1991-08-24 12:34:56.000Z',
+      );
+    });
+
+    test('converts from data', () {
+      final valueConverter = DateTimeToStringValueConverter();
+
+      expect(
+        valueConverter.convertFromData('1991-08-24 12:34:56.000Z'),
+        DateTime.parse('1991-08-24 12:34:56Z').toLocal(),
+      );
+    });
+  });
+
+  group('json to string value converter', () {
+    test('converts to data', () {
+      final valueConverter = JsonToStringValueConverter();
+
+      expect(valueConverter.convertToData({'field': 42}), '{"field":42}');
+    });
+
+    test('converts from data', () {
+      final valueConverter = JsonToStringValueConverter();
+
+      expect(valueConverter.convertFromData('{"field":42}'), {'field': 42});
     });
   });
 
@@ -141,42 +211,12 @@ void main() {
       expect(dataConverter.convertFromData(json2), json1);
     });
 
-    test('converts field name with fieldConverter', () {
-      final dataConverter = DataConverter(
-        fieldMap: {'firstField': 'another_name'},
-        fieldConverter: CamelToSnakeFieldConverter(),
-      );
-      final json1 = {
-        'firstField': 'Test',
-        'secondField': 42,
-        'thirdField': true,
-      };
-      final json2 = {
-        'another_name': 'Test',
-        'second_field': 42,
-        'third_field': true,
-      };
-
-      expect(dataConverter.convertFieldToData('firstField'), 'another_name');
-      expect(dataConverter.convertFieldFromData('another_name'), 'firstField');
-      expect(dataConverter.convertFieldToData('testField'), 'test_field');
-      expect(dataConverter.convertFieldToData('test_field'), 'test_field');
-      expect(dataConverter.convertFieldFromData('testField'), 'testField');
-      expect(dataConverter.convertFieldFromData('test_field'), 'testField');
-      expect(dataConverter.convertToData(json1), json2);
-      expect(dataConverter.convertFromData(json2), json1);
-    });
-
     test('converts value', () {
       final dataConverter = DataConverter(
         fieldMap: {'firstField': 'first_field'},
         valueMap: {
-          'firstField': (value) => value + '_2',
-          'second_field': (value) => value + 1,
-        },
-        reversedValueMap: {
-          'first_field': (value) => value.substring(0, 4),
-          'second_field': (value) => value - 1,
+          'second_field': const NumToStringValueConverter(),
+          'THIRD_FIELD': const BoolToStringValueConverter(),
         },
       );
       final json1 = {
@@ -185,9 +225,9 @@ void main() {
         'THIRD_FIELD': true,
       };
       final json2 = {
-        'first_field': 'Test_2',
-        'second_field': 43,
-        'THIRD_FIELD': true,
+        'first_field': 'Test',
+        'second_field': '42',
+        'THIRD_FIELD': '1',
       };
 
       expect(dataConverter.convertToData(json1), json2);

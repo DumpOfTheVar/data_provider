@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:data_provider/data_provider.dart';
 import 'package:recase/recase.dart';
 import 'operator.dart';
 import 'projector.dart';
@@ -88,52 +91,90 @@ class DefaultValueConverter implements ValueConverter {
   const DefaultValueConverter();
 
   @override
-  Object? convertFromData(Object? value) => value;
+  Object? convertToData(Object? value) => value;
 
   @override
-  Object? convertToData(Object? value) => value;
+  Object? convertFromData(Object? value) => value;
+}
+
+class NumToStringValueConverter implements ValueConverter {
+  const NumToStringValueConverter();
+
+  @override
+  String convertToData(Object? value) => value.toString();
+
+  @override
+  num convertFromData(Object? value) => num.parse(value as String);
+}
+
+class BoolToStringValueConverter implements ValueConverter {
+  const BoolToStringValueConverter();
+
+  @override
+  String convertToData(Object? value) => value as bool ? '1' : '0';
+
+  @override
+  bool convertFromData(Object? value) => value as String != '0';
+}
+
+class DateTimeToStringValueConverter implements ValueConverter {
+  const DateTimeToStringValueConverter();
+
+  @override
+  String convertToData(Object? value) => (value as DateTime).toUtc().toString();
+
+  @override
+  DateTime convertFromData(Object? value) =>
+      DateTime.parse(value as String).toLocal();
+}
+
+class JsonToStringValueConverter implements ValueConverter {
+  const JsonToStringValueConverter();
+
+  @override
+  String convertToData(Object? value) => jsonEncode(value);
+
+  @override
+  Object? convertFromData(Object? value) => jsonDecode(value as String);
 }
 
 class DataConverter {
   DataConverter({
     Map<String, String> fieldMap = const {},
-    FieldConverter fieldConverter = const DefaultFieldConverter(),
-    Map<String, Function(dynamic)> valueMap = const {},
-    Map<String, Function(dynamic)> reversedValueMap = const {},
-    ValueConverter valueConverter = const DefaultValueConverter(),
+    Map<String, ValueConverter> valueMap = const {},
   }) {
     _fieldMap = fieldMap;
     _reversedFieldMap = {};
     for (final entry in fieldMap.entries) {
       _reversedFieldMap[entry.value] = entry.key;
     }
-    _fieldConverter = fieldConverter;
     _valueMap = valueMap;
-    _reversedValueMap = reversedValueMap;
-    _valueConverter = valueConverter;
   }
 
   late final Map<String, String> _fieldMap;
   late final Map<String, String> _reversedFieldMap;
-  late final FieldConverter _fieldConverter;
-  late final Map<String, Function(dynamic)> _valueMap;
-  late final Map<String, Function(dynamic)> _reversedValueMap;
-  late final ValueConverter _valueConverter;
+  late final Map<String, ValueConverter> _valueMap;
 
   String convertFieldToData(String field) {
-    return _fieldMap[field] ?? _fieldConverter.convertToData(field);
+    return _fieldMap[field] ?? field;
   }
 
   String convertFieldFromData(String field) {
-    return _reversedFieldMap[field] ?? _fieldConverter.convertFromData(field);
+    return _reversedFieldMap[field] ?? field;
   }
 
   Object? convertValueToData(String field, Object? value) {
-    return (_valueMap[field] ?? _valueConverter.convertToData)(value);
+    if (!_valueMap.containsKey(field)) {
+      return value;
+    }
+    return _valueMap[field]?.convertToData(value);
   }
 
   Object? convertValueFromData(String field, Object? value) {
-    return (_reversedValueMap[field] ?? _valueConverter.convertFromData)(value);
+    if (!_valueMap.containsKey(field)) {
+      return value;
+    }
+    return _valueMap[field]?.convertFromData(value);
   }
 
   Map<String, dynamic> convertToData(Map<String, dynamic> json) {

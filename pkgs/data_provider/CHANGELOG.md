@@ -32,3 +32,7 @@
 
 ## 0.1.9
 - Added value converters
+
+## 0.2.0
+- Added new value converters
+- *breaking* Changed DataConverter parameters
