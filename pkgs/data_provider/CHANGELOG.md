@@ -28,3 +28,7 @@
 
 ## 0.1.8
 - Fixed bug with field converters in DataConverter
+- Added field converters
+
+## 0.1.9
+- Added value converters

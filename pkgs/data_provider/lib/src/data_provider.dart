@@ -79,12 +79,28 @@ class SnakeToCamelFieldConverter implements FieldConverter {
   String convertFromData(String field) => ReCase(field).snakeCase;
 }
 
+abstract class ValueConverter {
+  Object? convertToData(Object? value);
+  Object? convertFromData(Object? value);
+}
+
+class DefaultValueConverter implements ValueConverter {
+  const DefaultValueConverter();
+
+  @override
+  Object? convertFromData(Object? value) => value;
+
+  @override
+  Object? convertToData(Object? value) => value;
+}
+
 class DataConverter {
   DataConverter({
     Map<String, String> fieldMap = const {},
     FieldConverter fieldConverter = const DefaultFieldConverter(),
     Map<String, Function(dynamic)> valueMap = const {},
     Map<String, Function(dynamic)> reversedValueMap = const {},
+    ValueConverter valueConverter = const DefaultValueConverter(),
   }) {
     _fieldMap = fieldMap;
     _reversedFieldMap = {};
@@ -94,6 +110,7 @@ class DataConverter {
     _fieldConverter = fieldConverter;
     _valueMap = valueMap;
     _reversedValueMap = reversedValueMap;
+    _valueConverter = valueConverter;
   }
 
   late final Map<String, String> _fieldMap;
@@ -101,6 +118,7 @@ class DataConverter {
   late final FieldConverter _fieldConverter;
   late final Map<String, Function(dynamic)> _valueMap;
   late final Map<String, Function(dynamic)> _reversedValueMap;
+  late final ValueConverter _valueConverter;
 
   String convertFieldToData(String field) {
     return _fieldMap[field] ?? _fieldConverter.convertToData(field);
@@ -110,30 +128,31 @@ class DataConverter {
     return _reversedFieldMap[field] ?? _fieldConverter.convertFromData(field);
   }
 
+  Object? convertValueToData(String field, Object? value) {
+    return (_valueMap[field] ?? _valueConverter.convertToData)(value);
+  }
+
+  Object? convertValueFromData(String field, Object? value) {
+    return (_reversedValueMap[field] ?? _valueConverter.convertFromData)(value);
+  }
+
   Map<String, dynamic> convertToData(Map<String, dynamic> json) {
-    return _convertJson(convertFieldToData, _valueMap, json);
+    return _convertJson(convertFieldToData, convertValueToData, json);
   }
 
   Map<String, dynamic> convertFromData(Map<String, dynamic> json) {
-    return _convertJson(convertFieldFromData, _reversedValueMap, json);
+    return _convertJson(convertFieldFromData, convertValueFromData, json);
   }
 
-  _convertValue(Map<String, Function(dynamic)> map, String field, value) {
-    if (!map.containsKey(field)) {
-      return value;
-    }
-    return map[field]!(value);
-  }
-
-  Map<String, dynamic> _convertJson(
+  Map<String, Object?> _convertJson(
     String Function(String) convertField,
-    Map<String, Function(dynamic)> valueMap,
-    Map<String, dynamic> json,
+    Object? Function(String, Object?) convertValue,
+    Map<String, Object?> json,
   ) {
-    final result = <String, dynamic>{};
+    final result = <String, Object?>{};
     for (String field in json.keys) {
       final convertedField = convertField(field);
-      final convertedValue = _convertValue(valueMap, field, json[field]);
+      final convertedValue = convertValue(field, json[field]);
       result[convertedField] = convertedValue;
     }
     return result;

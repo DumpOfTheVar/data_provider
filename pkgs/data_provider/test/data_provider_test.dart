@@ -2,7 +2,7 @@ import 'package:data_provider/data_provider.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('default field converters', () {
+  group('default field converter', () {
     test('converts to data', () {
       final fieldConverter = DefaultFieldConverter();
 
@@ -26,7 +26,7 @@ void main() {
     });
   });
 
-  group('camel to snake field converters', () {
+  group('camel to snake field converter', () {
     test('converts to data', () {
       final fieldConverter = CamelToSnakeFieldConverter();
 
@@ -50,7 +50,7 @@ void main() {
     });
   });
 
-  group('snake to camel field converters', () {
+  group('snake to camel field converter', () {
     test('converts to data', () {
       final fieldConverter = SnakeToCamelFieldConverter();
 
@@ -71,6 +71,31 @@ void main() {
       expect(fieldConverter.convertFromData('test_field'), 'test_field');
       expect(
           fieldConverter.convertFromData('long_test_field'), 'long_test_field');
+    });
+  });
+
+  group('default value converter', () {
+    test('converts to data', () {
+      final valueConverter = DefaultValueConverter();
+
+      expect(valueConverter.convertToData(42), 42);
+      expect(valueConverter.convertToData('Test'), 'Test');
+      expect(valueConverter.convertToData(true), true);
+      expect(valueConverter.convertToData({'field': 42}), {'field': 42});
+      expect(valueConverter.convertToData([1, 2, 3]), [1, 2, 3]);
+      expect(valueConverter.convertToData(DateTime(100500)), DateTime(100500));
+    });
+
+    test('converts from data', () {
+      final valueConverter = DefaultValueConverter();
+
+      expect(valueConverter.convertFromData(42), 42);
+      expect(valueConverter.convertFromData('Test'), 'Test');
+      expect(valueConverter.convertFromData(true), true);
+      expect(valueConverter.convertFromData({'field': 42}), {'field': 42});
+      expect(valueConverter.convertFromData([1, 2, 3]), [1, 2, 3]);
+      expect(
+          valueConverter.convertFromData(DateTime(100500)), DateTime(100500));
     });
   });
 
