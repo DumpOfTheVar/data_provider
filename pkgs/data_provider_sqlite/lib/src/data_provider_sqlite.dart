@@ -341,20 +341,26 @@ class SqliteSorterMapper extends SorterMapper<String?> {
   }
 }
 
-SqliteDataProvider buildSqliteDataProvider({
-  required String dbName,
-  required String tableName,
-  List<String> migrations = const <String>[],
-  Map<String, String> fieldMap = const {},
-  FieldConverter fieldConverter = const CamelToSnakeFieldConverter(),
-  Map<String, Function(dynamic)> valueMap = const {},
-  Map<String, Function(dynamic)> reversedValueMap = const {},
-}) {
+SqliteDataProvider buildSqliteDataProvider<T>(
+  Map config,
+  List<String> migrations,
+) {
+  final dbName = config['db'];
+  final entity = config['entities'][T.toString()];
+  if (entity == null) {
+    throw Exception('Config for entity ${T.toString()} not found.');
+  }
+  final tableName = entity['table'];
+  final fields = entity['fields'];
+  final fieldMap = <String, String>{};
+  final valueMap = <String, ValueConverter>{};
+  for (final field in fields.keys) {
+    fieldMap[field] = fields[field]['column'];
+    valueMap[field] = fields[field]['converter'];
+  }
   final dataConverter = DataConverter(
     fieldMap: fieldMap,
-    fieldConverter: fieldConverter,
     valueMap: valueMap,
-    reversedValueMap: reversedValueMap,
   );
   final unaryOperatorMapper = SqliteUnaryOperatorMapper();
   final binaryOperatorMapper = SqliteBinaryOperatorMapper();

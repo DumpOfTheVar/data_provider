@@ -37,3 +37,10 @@
 
 ## 0.1.9
 - Upgraded data_provider version to fix bug in DataConverter
+
+## 0.1.10
+- Added value converters support
+
+## 0.2.0
+- Upgraded to data_provider v0.2.0
+- *breaking* Changed buildSqliteDataProvider params

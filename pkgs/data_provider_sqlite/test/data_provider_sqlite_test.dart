@@ -924,12 +924,25 @@ void main() {
     });
   });
 
-  group('in memory data provider builder', () {
-    test('creates in memory data provider', () {
-      final dataProvider = buildSqliteDataProvider(
-        dbName: 'test_db',
-        tableName: 'test_table',
-      );
+  group('sqlite data provider builder', () {
+    test('creates sqlite data provider', () {
+      final config = {
+        'db': 'test_db',
+        'entities': {
+          'Entity': {
+            'table': 'entity',
+            'fields': {
+              'id': {
+                'type': int,
+                'column': 'id',
+                'converter': DefaultValueConverter(),
+              },
+            },
+          },
+        },
+      };
+      final migrations = ['CREATE TABLE entity(id INT PRIMARY KEY);'];
+      final dataProvider = buildSqliteDataProvider<Entity>(config, migrations);
       expect(dataProvider, isA<SqliteDataProvider>());
     });
   });
@@ -1024,4 +1037,14 @@ class NotSupportedSorter extends Sorter {
   int compare(a, b) {
     return 0;
   }
+}
+
+class Entity implements Serializable {
+  Entity({required this.id});
+  factory Entity.fromJson(json) => Entity(id: json['id']);
+
+  final int id;
+
+  @override
+  Map<String, dynamic> toJson() => {'id': id};
 }
