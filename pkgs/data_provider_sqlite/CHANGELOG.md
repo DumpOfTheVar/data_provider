@@ -44,3 +44,7 @@
 ## 0.2.0
 - Upgraded to data_provider v0.2.0
 - *breaking* Changed buildSqliteDataProvider params
+
+## 0.2.1
+- Added SqliteValueConverter
+- Fixed ConstValue projector mapping

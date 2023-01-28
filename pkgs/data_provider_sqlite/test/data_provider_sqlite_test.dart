@@ -8,6 +8,52 @@ import 'package:test/test.dart';
 import 'data_provider_sqlite_test.mocks.dart';
 
 void main() {
+  group('sqlite value converter', () {
+    test('converts from data format', () {
+      final converter = SqliteValueConverter();
+      expect(converter.convertFromData('Test'), 'Test');
+      expect(converter.convertFromData('42'), '42');
+      expect(converter.convertFromData('true'), 'true');
+    });
+
+    test('converts strings to data format', () {
+      final converter = SqliteValueConverter();
+      expect(converter.convertToData('Test'), 'Test');
+      expect(converter.convertToData('42'), '42');
+      expect(converter.convertToData('true'), 'true');
+    });
+
+    test('converts numbers to data format', () {
+      final converter = SqliteValueConverter();
+      expect(converter.convertToData(42), '42');
+      expect(converter.convertToData(36.6), '36.6');
+      expect(converter.convertToData(-100), '-100');
+    });
+
+    test('converts booleans to data format', () {
+      final converter = SqliteValueConverter();
+      expect(converter.convertToData(true), '1');
+      expect(converter.convertToData(false), '0');
+    });
+
+    test('converts date time to data format', () {
+      final converter = SqliteValueConverter();
+      expect(converter.convertToData(DateTime.parse('1991-08-24 12:34:56Z')),
+          '1991-08-24 12:34:56.000Z');
+    });
+
+    test('converts json to data format', () {
+      final converter = SqliteValueConverter();
+      expect(converter.convertToData({'field': 42}), '{"field":42}');
+      expect(converter.convertToData(['one', 'two']), '["one","two"]');
+    });
+
+    test('throws exception on not supported type', () {
+      final converter = SqliteValueConverter();
+      expect(() => converter.convertToData(Set()), throwsException);
+    });
+  });
+
   group('sqlite unary operator mapper', () {
     test('maps unary minus', () {
       final mapper = SqliteUnaryOperatorMapper();
@@ -237,14 +283,7 @@ void main() {
 
   group('sqlite projector mapper', () {
     test('maps const value projector', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final mapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeProjectorMapper();
       final projector1 = ConstValue(42);
       final projector2 = ConstValue('Test');
       final projector3 = ConstValue(true);
@@ -257,24 +296,15 @@ void main() {
       expect(expression1.args, ['42']);
       expect(expression2.expression, '?');
       expect(expression2.args, ['Test']);
-      expect(expression3.expression, '1');
-      expect(expression3.args, []);
+      expect(expression3.expression, '?');
+      expect(expression3.args, ['1']);
     });
 
-    test('maps const value projector', () {
-      final dataConverter = DataConverter(
-        fieldMap: {
-          'field1': 'field1',
-          'anotherField': 'another_field',
-        },
-      );
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final mapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+    test('maps field value projector', () {
+      final mapper = makeProjectorMapper({
+        'field1': 'field1',
+        'anotherField': 'another_field',
+      });
       final projector1 = FieldValue('field1');
       final projector2 = FieldValue('field2');
       final projector3 = FieldValue('anotherField');
@@ -292,14 +322,7 @@ void main() {
     });
 
     test('maps unary expression projector', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final mapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeProjectorMapper();
       final projector1 = UnaryExpression(UnaryMinus(), ConstValue(42));
       final projector2 = UnaryExpression(UnaryMinus(), FieldValue('test'));
 
@@ -313,14 +336,7 @@ void main() {
     });
 
     test('maps binary expression projector', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final mapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeProjectorMapper();
       final p1 = FieldValue('test');
       final p2 = ConstValue(42);
       final projector = BinaryExpression(Plus(), p1, p2);
@@ -332,14 +348,7 @@ void main() {
     });
 
     test('throws exception on not supported projector', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final mapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeProjectorMapper();
       final projector = NotSupportedProjector();
 
       expect(() => mapper.map(projector), throwsException);
@@ -348,18 +357,7 @@ void main() {
 
   group('sqlite specification mapper', () {
     test('maps null', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
 
       final expression = mapper.map(null);
 
@@ -368,18 +366,7 @@ void main() {
     });
 
     test('maps custom specification', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
       final specification1 = CustomSpecificationStub(True());
       final specification2 = CustomSpecificationStub(False());
 
@@ -393,18 +380,7 @@ void main() {
     });
 
     test('maps true specification', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
       final specification = True();
 
       final expression = mapper.map(specification);
@@ -414,18 +390,7 @@ void main() {
     });
 
     test('maps false specification', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
       final specification = False();
 
       final expression = mapper.map(specification);
@@ -435,18 +400,7 @@ void main() {
     });
 
     test('maps not specification', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
       final specification1 = Not(True());
       final specification2 = Not(False());
 
@@ -460,18 +414,7 @@ void main() {
     });
 
     test('maps and specification', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
       final specification1 = And([]);
       final specification2 = And([True()]);
       final specification3 = And([False()]);
@@ -505,18 +448,7 @@ void main() {
     });
 
     test('maps or specification', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
       final specification1 = Or([]);
       final specification2 = Or([True()]);
       final specification3 = Or([False()]);
@@ -550,36 +482,14 @@ void main() {
     });
 
     test('throws exception on not supported composite specification', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
       final specification = NotSupportedCompositeSpecification([]);
 
       expect(() => mapper.map(specification), throwsException);
     });
 
     test('maps compare specification', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
       final specification = Compare(
         operator: Equals(),
         projector1: ConstValue(42),
@@ -593,18 +503,7 @@ void main() {
     });
 
     test('throws exception on not supported specification', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSpecificationMapper(
-        projectorMapper: projectorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
+      final mapper = makeSpecificationMapper();
       final specification = NotSupportedSpecification();
 
       expect(() => mapper.map(specification), throwsException);
@@ -613,17 +512,7 @@ void main() {
 
   group('sqlite sorter mapper', () {
     test('maps null', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSorterMapper(
-        projectorMapper: projectorMapper,
-      );
+      final mapper = makeSorterMapper();
 
       final orderBy = mapper.map(null);
 
@@ -631,17 +520,7 @@ void main() {
     });
 
     test('maps value sorter', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSorterMapper(
-        projectorMapper: projectorMapper,
-      );
+      final mapper = makeSorterMapper();
       final sorter1 = ValueSorter(FieldValue('test'));
       final sorter2 = ValueSorter(FieldValue('test'), true);
       final sorter3 = ValueSorter(FieldValue('test'), false);
@@ -656,34 +535,14 @@ void main() {
     });
 
     test('throws exception if args required', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSorterMapper(
-        projectorMapper: projectorMapper,
-      );
+      final mapper = makeSorterMapper();
       final sorter = ValueSorter(ConstValue(42));
 
       expect(() => mapper.map(sorter), throwsException);
     });
 
     test('maps composite sorter', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSorterMapper(
-        projectorMapper: projectorMapper,
-      );
+      final mapper = makeSorterMapper();
       final sorter = CompositeSorter([
         ValueSorter(FieldValue('field1')),
         ValueSorter(FieldValue('field2'), true),
@@ -696,17 +555,7 @@ void main() {
     });
 
     test('maps composite sorter', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSorterMapper(
-        projectorMapper: projectorMapper,
-      );
+      final mapper = makeSorterMapper();
       final sorter = CustomSorterStub(ValueSorter(FieldValue('field')));
 
       final orderBy = mapper.map(sorter);
@@ -715,17 +564,7 @@ void main() {
     });
 
     test('throws exception on not supported sorter', () {
-      final dataConverter = DataConverter();
-      final unaryOperatorMapper = SqliteUnaryOperatorMapper();
-      final binaryOperatorMapper = SqliteBinaryOperatorMapper();
-      final projectorMapper = SqliteProjectorMapper(
-        dataConverter: dataConverter,
-        unaryOperatorMapper: unaryOperatorMapper,
-        binaryOperatorMapper: binaryOperatorMapper,
-      );
-      final mapper = SqliteSorterMapper(
-        projectorMapper: projectorMapper,
-      );
+      final mapper = makeSorterMapper();
       final sorter = NotSupportedSorter();
 
       expect(() => mapper.map(sorter), throwsException);
@@ -945,15 +784,86 @@ void main() {
       final dataProvider = buildSqliteDataProvider<Entity>(config, migrations);
       expect(dataProvider, isA<SqliteDataProvider>());
     });
+
+    test('throws exception if entity is not supported', () {
+      final config = {
+        'db': 'test_db',
+        'entities': {
+          'Entity': {
+            'table': 'entity',
+            'fields': {
+              'id': {
+                'type': int,
+                'column': 'id',
+                'converter': DefaultValueConverter(),
+              },
+            },
+          },
+        },
+      };
+      final migrations = ['CREATE TABLE entity(id INT PRIMARY KEY);'];
+
+      expect(() => buildSqliteDataProvider<Object>(config, migrations),
+          throwsException);
+    });
   });
+}
+
+ProjectorMapper makeProjectorMapper(
+    [Map<String, String> fieldMap = const <String, String>{}]) {
+  final dataConverter = DataConverter(fieldMap: fieldMap);
+  final unaryOperatorMapper = SqliteUnaryOperatorMapper();
+  final binaryOperatorMapper = SqliteBinaryOperatorMapper();
+  final valueConverter = SqliteValueConverter();
+  return SqliteProjectorMapper(
+    dataConverter: dataConverter,
+    valueConverter: valueConverter,
+    unaryOperatorMapper: unaryOperatorMapper,
+    binaryOperatorMapper: binaryOperatorMapper,
+  );
+}
+
+SpecificationMapper makeSpecificationMapper() {
+  final dataConverter = DataConverter();
+  final unaryOperatorMapper = SqliteUnaryOperatorMapper();
+  final binaryOperatorMapper = SqliteBinaryOperatorMapper();
+  final valueConverter = SqliteValueConverter();
+  final projectorMapper = SqliteProjectorMapper(
+    dataConverter: dataConverter,
+    valueConverter: valueConverter,
+    unaryOperatorMapper: unaryOperatorMapper,
+    binaryOperatorMapper: binaryOperatorMapper,
+  );
+  return SqliteSpecificationMapper(
+    projectorMapper: projectorMapper,
+    binaryOperatorMapper: binaryOperatorMapper,
+  );
+}
+
+SorterMapper makeSorterMapper() {
+  final dataConverter = DataConverter();
+  final unaryOperatorMapper = SqliteUnaryOperatorMapper();
+  final binaryOperatorMapper = SqliteBinaryOperatorMapper();
+  final valueConverter = SqliteValueConverter();
+  final projectorMapper = SqliteProjectorMapper(
+    dataConverter: dataConverter,
+    valueConverter: valueConverter,
+    unaryOperatorMapper: unaryOperatorMapper,
+    binaryOperatorMapper: binaryOperatorMapper,
+  );
+  return SqliteSorterMapper(
+    projectorMapper: projectorMapper,
+  );
 }
 
 DataProvider makeDataProvider(Database db) {
   final dataConverter = DataConverter();
   final unaryOperatorMapper = SqliteUnaryOperatorMapper();
   final binaryOperatorMapper = SqliteBinaryOperatorMapper();
+  final valueConverter = SqliteValueConverter();
   final projectorMapper = SqliteProjectorMapper(
     dataConverter: dataConverter,
+    valueConverter: valueConverter,
     unaryOperatorMapper: unaryOperatorMapper,
     binaryOperatorMapper: binaryOperatorMapper,
   );

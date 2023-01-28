@@ -137,8 +137,43 @@ typedef SqliteUnaryOperator = SqliteExpression Function(SqliteExpression);
 typedef SqliteBinaryOperator = SqliteExpression Function(
     SqliteExpression, SqliteExpression);
 
+class SqliteValueConverter implements ValueConverter {
+  const SqliteValueConverter();
+
+  final numConverter = const NumToStringValueConverter();
+  final boolConverter = const BoolToStringValueConverter();
+  final dateTimeConverter = const DateTimeToStringValueConverter();
+  final jsonConverter = const JsonToStringValueConverter();
+
+  @override
+  String convertToData(Object? value) {
+    if (value is String) {
+      return value;
+    }
+    if (value is num) {
+      return numConverter.convertToData(value);
+    }
+    if (value is bool) {
+      return boolConverter.convertToData(value);
+    }
+    if (value is DateTime) {
+      return dateTimeConverter.convertToData(value);
+    }
+    if (value is List || value is Map) {
+      return jsonConverter.convertToData(value);
+    }
+    throw TypeNotSupportedException('SqliteDataProvider does not support '
+        'value type ${value.runtimeType}.');
+  }
+
+  @override
+  Object? convertFromData(Object? value) => value;
+}
+
 class SqliteUnaryOperatorMapper
     implements UnaryOperatorMapper<SqliteUnaryOperator> {
+  const SqliteUnaryOperatorMapper();
+
   @override
   SqliteUnaryOperator map(UnaryOperator operator) {
     if (operator is UnaryMinus) {
@@ -164,8 +199,10 @@ class SqliteUnaryOperatorMapper
 }
 
 class SqliteBinaryOperatorMapper
-    extends BinaryOperatorMapper<SqliteBinaryOperator> {
-  final operatorMap = {
+    implements BinaryOperatorMapper<SqliteBinaryOperator> {
+  const SqliteBinaryOperatorMapper();
+
+  final operatorMap = const {
     '==': '=',
     '<': '<',
     '<=': '<=',
@@ -207,24 +244,24 @@ class SqliteBinaryOperatorMapper
   }
 }
 
-class SqliteProjectorMapper extends ProjectorMapper<SqliteExpression> {
-  SqliteProjectorMapper({
+class SqliteProjectorMapper implements ProjectorMapper<SqliteExpression> {
+  const SqliteProjectorMapper({
     required this.dataConverter,
+    required this.valueConverter,
     required this.unaryOperatorMapper,
     required this.binaryOperatorMapper,
   });
 
   final DataConverter dataConverter;
+  final SqliteValueConverter valueConverter;
   final SqliteUnaryOperatorMapper unaryOperatorMapper;
   final SqliteBinaryOperatorMapper binaryOperatorMapper;
 
   @override
   SqliteExpression map(Projector projector) {
     if (projector is ConstValue) {
-      if (projector.value is bool) {
-        return SqliteExpression(projector.value ? '1' : '0', []);
-      }
-      return SqliteExpression('?', [projector.value.toString()]);
+      return SqliteExpression(
+          '?', [valueConverter.convertToData(projector.value)]);
     }
     if (projector is FieldValue) {
       final field = dataConverter.convertFieldToData(projector.field);
@@ -248,8 +285,9 @@ class SqliteProjectorMapper extends ProjectorMapper<SqliteExpression> {
   }
 }
 
-class SqliteSpecificationMapper extends SpecificationMapper<SqliteExpression> {
-  SqliteSpecificationMapper({
+class SqliteSpecificationMapper
+    implements SpecificationMapper<SqliteExpression> {
+  const SqliteSpecificationMapper({
     required this.projectorMapper,
     required this.binaryOperatorMapper,
   });
@@ -311,8 +349,8 @@ class SqliteSpecificationMapper extends SpecificationMapper<SqliteExpression> {
   }
 }
 
-class SqliteSorterMapper extends SorterMapper<String?> {
-  SqliteSorterMapper({required this.projectorMapper});
+class SqliteSorterMapper implements SorterMapper<String?> {
+  const SqliteSorterMapper({required this.projectorMapper});
 
   final SqliteProjectorMapper projectorMapper;
 
@@ -362,10 +400,12 @@ SqliteDataProvider buildSqliteDataProvider<T>(
     fieldMap: fieldMap,
     valueMap: valueMap,
   );
+  final valueConverter = SqliteValueConverter();
   final unaryOperatorMapper = SqliteUnaryOperatorMapper();
   final binaryOperatorMapper = SqliteBinaryOperatorMapper();
   final projectorMapper = SqliteProjectorMapper(
     dataConverter: dataConverter,
+    valueConverter: valueConverter,
     unaryOperatorMapper: unaryOperatorMapper,
     binaryOperatorMapper: binaryOperatorMapper,
   );
