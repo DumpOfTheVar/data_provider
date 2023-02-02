@@ -36,3 +36,9 @@
 ## 0.2.0
 - Added new value converters
 - *breaking* Changed DataConverter parameters
+
+## 0.2.1
+- Added StringValueConverter class
+- Fixes in value converters
+
+

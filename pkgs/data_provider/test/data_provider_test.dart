@@ -98,6 +98,24 @@ void main() {
     });
   });
 
+  group('string value converter', () {
+    test('converts to data', () {
+      final valueConverter = StringValueConverter();
+
+      expect(valueConverter.convertToData(42), '42');
+      expect(valueConverter.convertToData('Test'), 'Test');
+      expect(valueConverter.convertToData(true), 'true');
+    });
+
+    test('converts from data', () {
+      final valueConverter = StringValueConverter();
+
+      expect(valueConverter.convertFromData(42), '42');
+      expect(valueConverter.convertFromData('Test'), 'Test');
+      expect(valueConverter.convertFromData(true), 'true');
+    });
+  });
+
   group('num to string value converter', () {
     test('converts to data', () {
       final valueConverter = NumToStringValueConverter();

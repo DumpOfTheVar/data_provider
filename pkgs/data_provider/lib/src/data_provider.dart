@@ -95,35 +95,69 @@ class DefaultValueConverter implements ValueConverter {
   Object? convertFromData(Object? value) => value;
 }
 
+class StringValueConverter implements ValueConverter {
+  const StringValueConverter();
+
+  @override
+  String? convertToData(Object? value) => value?.toString();
+
+  @override
+  String? convertFromData(Object? value) => value?.toString();
+}
+
 class NumToStringValueConverter implements ValueConverter {
   const NumToStringValueConverter();
 
   @override
-  String convertToData(Object? value) => value.toString();
+  String? convertToData(Object? value) => value?.toString();
 
   @override
-  num convertFromData(Object? value) => num.parse(value as String);
+  num? convertFromData(Object? value) {
+    if (value == null || value == '') {
+      return null;
+    }
+    if (value is num) {
+      return value;
+    }
+    return num.parse(value as String);
+  }
 }
 
 class BoolToStringValueConverter implements ValueConverter {
   const BoolToStringValueConverter();
 
   @override
-  String convertToData(Object? value) => value as bool ? '1' : '0';
+  String? convertToData(Object? value) => value as bool ? '1' : '0';
 
   @override
-  bool convertFromData(Object? value) => value as String != '0';
+  bool? convertFromData(Object? value) {
+    if (value == null || value == '') {
+      return null;
+    }
+    if (value is bool) {
+      return value;
+    }
+    return value.toString() == '1';
+  }
 }
 
 class DateTimeToStringValueConverter implements ValueConverter {
   const DateTimeToStringValueConverter();
 
   @override
-  String convertToData(Object? value) => (value as DateTime).toUtc().toString();
+  String? convertToData(Object? value) =>
+      (value as DateTime?)?.toUtc().toString();
 
   @override
-  DateTime convertFromData(Object? value) =>
-      DateTime.parse(value as String).toLocal();
+  DateTime? convertFromData(Object? value) {
+    if (value == null || value == '') {
+      return null;
+    }
+    if (value is DateTime) {
+      return value;
+    }
+    return DateTime.parse(value as String).toLocal();
+  }
 }
 
 class JsonToStringValueConverter implements ValueConverter {
