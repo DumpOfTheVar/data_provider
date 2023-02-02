@@ -48,3 +48,4 @@
 ## 0.2.1
 - Added SqliteValueConverter
 - Fixed ConstValue projector mapping
+- Updated data_provider version to v0.2.2

@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  data_provider: ^0.2.0
+  data_provider: ^0.2.2
   path: ^1.8.0
   sqflite: ^2.0.1
 
@@ -19,3 +19,6 @@ dev_dependencies:
   test: ^1.16.0
   mockito: ^5.3.2
   build_runner: ^2.3.3
+  args: ^2.3.2
+  code_builder: ^4.4.0
+  analyzer: ^5.4.0

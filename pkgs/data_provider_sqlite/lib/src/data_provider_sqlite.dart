@@ -130,7 +130,7 @@ class SqliteExpression {
   SqliteExpression(this.expression, this.args);
 
   final String expression;
-  final List<String> args;
+  final List<String?> args;
 }
 
 typedef SqliteUnaryOperator = SqliteExpression Function(SqliteExpression);
@@ -146,7 +146,7 @@ class SqliteValueConverter implements ValueConverter {
   final jsonConverter = const JsonToStringValueConverter();
 
   @override
-  String convertToData(Object? value) {
+  String? convertToData(Object? value) {
     if (value is String) {
       return value;
     }
@@ -226,13 +226,13 @@ class SqliteBinaryOperatorMapper
             ? 'CAST(${e1.expression} AS FLOAT)'
             : '(${e1.expression})';
         final expr2 = '(${e2.expression})';
-        final args = List<String>.from(e1.args)..addAll(e2.args);
+        final args = List<String?>.from(e1.args)..addAll(e2.args);
         return SqliteExpression('$expr1 $op $expr2', args);
       };
     }
     if (operator is Concat) {
       return (SqliteExpression e1, SqliteExpression e2) {
-        final args = List<String>.from(e1.args)..addAll(e2.args);
+        final args = List<String?>.from(e1.args)..addAll(e2.args);
         return SqliteExpression(
             'CONCAT(${e1.expression}, ${e2.expression})', args);
       };
@@ -327,7 +327,7 @@ class SqliteSpecificationMapper
             'specification type ${specification.runtimeType}.');
       }
       final List<String> expressions = [];
-      final List<String> args = <String>[];
+      final List<String?> args = <String?>[];
       for (final child in specification.children) {
         final expression = map(child);
         expressions.add(expression.expression);

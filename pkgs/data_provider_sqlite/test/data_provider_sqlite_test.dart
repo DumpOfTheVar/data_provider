@@ -125,7 +125,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) = (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps less operator', () {
@@ -138,7 +138,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) < (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps less or equals operator', () {
@@ -151,7 +151,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) <= (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps greater operator', () {
@@ -164,7 +164,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) > (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps greater or equals operator', () {
@@ -177,7 +177,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) >= (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps plus operator', () {
@@ -190,7 +190,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) + (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps minus operator', () {
@@ -203,7 +203,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) - (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps multiply operator', () {
@@ -216,7 +216,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) * (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps plus operator', () {
@@ -230,7 +230,7 @@ void main() {
 
       expect(expression.expression,
           'CAST(${e1.expression} AS FLOAT) / (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps integer divide operator', () {
@@ -243,7 +243,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) / (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps modulo operator', () {
@@ -256,7 +256,7 @@ void main() {
       final expression = mappedOperator(e1, e2);
 
       expect(expression.expression, '(${e1.expression}) % (${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('maps concat operator', () {
@@ -270,7 +270,7 @@ void main() {
 
       expect(
           expression.expression, 'CONCAT(${e1.expression}, ${e2.expression})');
-      expect(expression.args, List<String>.from(e1.args)..addAll(e2.args));
+      expect(expression.args, List<String?>.from(e1.args)..addAll(e2.args));
     });
 
     test('throws exception on not supported binary operator', () {
