@@ -41,4 +41,5 @@
 - Added StringValueConverter class
 - Fixes in value converters
 
-
+## 0.2.2
+- Fix in DataConverter class

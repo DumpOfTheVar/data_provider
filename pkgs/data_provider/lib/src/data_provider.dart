@@ -210,22 +210,20 @@ class DataConverter {
   }
 
   Map<String, dynamic> convertToData(Map<String, dynamic> json) {
-    return _convertJson(convertFieldToData, convertValueToData, json);
+    final result = <String, Object?>{};
+    for (String field in json.keys) {
+      final convertedField = convertFieldToData(field);
+      final convertedValue = convertValueToData(field, json[field]);
+      result[convertedField] = convertedValue;
+    }
+    return result;
   }
 
   Map<String, dynamic> convertFromData(Map<String, dynamic> json) {
-    return _convertJson(convertFieldFromData, convertValueFromData, json);
-  }
-
-  Map<String, Object?> _convertJson(
-    String Function(String) convertField,
-    Object? Function(String, Object?) convertValue,
-    Map<String, Object?> json,
-  ) {
     final result = <String, Object?>{};
     for (String field in json.keys) {
-      final convertedField = convertField(field);
-      final convertedValue = convertValue(field, json[field]);
+      final convertedField = convertFieldFromData(field);
+      final convertedValue = convertValueFromData(convertedField, json[field]);
       result[convertedField] = convertedValue;
     }
     return result;
